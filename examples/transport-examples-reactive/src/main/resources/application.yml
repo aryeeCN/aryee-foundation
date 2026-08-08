@@ -1,0 +1,23 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /transport-reactive
+
+spring:
+  application:
+    name: transport-examples-reactive
+
+# Aryee Transport Reactive 配置
+aryee:
+  transport:
+    reactive:
+      enabled: true
+      cors-enabled: true
+      request-log-enabled: true
+      default-client-type: WEBCLIENT
+      default-timeout-ms: 10000
+
+logging:
+  level:
+    cn.aryee.transport: DEBUG
+    cn.aryee.examples.transport: INFO

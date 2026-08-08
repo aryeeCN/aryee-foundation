@@ -1,0 +1,40 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: monitoring-trace-example-blocking
+
+aryee:
+  monitoring:
+    enabled: true
+    metrics:
+      enabled: false     # 示例仅演示 TraceFilter，关闭 metrics/alerts/logs 避免缺 Factory Bean 报错
+    alerts:
+      enabled: false
+    logs:
+      enabled: false
+    tracing:
+      enabled: true
+      service-name: ${spring.application.name}
+      # 默认 provider: none，示例不启动真实追踪服务
+      provider: none
+      # 请求入口 Trace 过滤器（本示例验证核心目标）
+      trace-filter:
+        enabled: true
+        trace-id-header: traceparent
+        fallback-trace-id-headers:
+          - X-B3-TraceId
+          - x-trace-id
+        fallback-span-id-headers:
+          - X-B3-SpanId
+        response-trace-id-header: x-trace-id
+        exclude-patterns:
+          - /actuator/**
+          - /error
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

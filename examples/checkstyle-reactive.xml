@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+  Aryee Foundation 响应式编程 Checkstyle 规则配置
+  
+  重点检查:
+  1. 禁止在响应式代码中使用阻塞调用 (.block(), .blockFirst(), .blockLast())
+  2. 强制远程调用必须有超时控制
+  3. 强制异常处理规范
+  4. 强制背压支持
+  
+  @author Aryee
+  @since 1.0.0
+-->
+<module name="Checker">
+  <property name="charset" value="UTF-8"/>
+  <property name="severity" value="warning"/>
+  <property name="fileExtensions" value="java, properties, xml"/>
+  
+  <!-- XDocReportFilter 用于排除某些误报 -->
+  <module name="BeforeExecutionExclusionFileFilter">
+    <property name="fileNamePattern" value="module\-info\.java$"/>
+  </module>
+  
+  <!-- ========================================================================= -->
+  <!-- 响应式编程专项检查规则 -->
+  <!-- ========================================================================= -->
+  
+  <!-- 规则 1: 禁止使用阻塞调用 -->
+  <module name="RegexpSingleline">
+    <property name="id" value="ReactiveBlockingCall"/>
+    <property name="format" value="\.(block|blockFirst|blockLast)\(\)"/>
+    <property name="message" value="阻塞调用在响应式代码中是禁止的！请使用 flatMap、map 等链式调用。"/>
+    <property name="severity" value="error"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  
+  <!-- 规则 2: WebClient 调用必须有超时控制 -->
+  <module name="RegexpSingleline">
+    <property name="id" value="WebClientMissingTimeout"/>
+    <property name="format" value="webClient\..*\.retrieve\(\)"/>
+    <property name="message" value="WebClient 调用必须包含超时控制！请添加 .timeout() 方法。"/>
+    <property name="severity" value="error"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  
+  <!-- 规则 3: Flux 返回方法应该有背压支持 -->
+  <module name="RegexpSingleline">
+    <property name="id" value="FluxMissingBackpressure"/>
+    <property name="format" value="return\s+Flux\.[a-zA-Z]+\([^)]*\)\s*;"/>
+    <property name="message" value="Flux 返回方法应该考虑背压支持！建议添加 limitRate() 或 publishOn()。"/>
+    <property name="severity" value="warning"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  
+  <!-- 规则 4: 禁止吞掉异常 (空的 onErrorResume) -->
+  <module name="RegexpMultiline">
+    <property name="id" value="SwallowedException"/>
+    <property name="format" value="\.onErrorResume\(\s*e\s*-&gt;\s*Mono\.empty\(\s*\)\s*\)"/>
+    <property name="message" value="禁止吞掉异常！应该记录日志或抛出有意义的错误。"/>
+    <property name="severity" value="error"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  
+  <!-- 规则 5: 响应式方法应该使用合适的调度器 -->
+  <module name="RegexpSingleline">
+    <property name="id" value="MissingScheduler"/>
+    <property name="format" value="\.subscribeOn\(\)\s*;"/>
+    <property name="message" value="subscribeOn 必须指定调度器！例如：Schedulers.boundedElastic()"/>
+    <property name="severity" value="error"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  
+  <!-- ========================================================================= -->
+  <!-- 通用 Java 代码规范 -->
+  <!-- ========================================================================= -->
+  
+  <!-- Javadoc 注释检查 -->
+  <module name="JavadocPackage">
+    <property name="allowLegacy" value="true"/>
+  </module>
+  
+  <module name="JavadocType">
+    <property name="scope" value="public"/>
+    <property name="authorFormat" value=".+\s.+"/>
+  </module>
+  
+  <module name="JavadocMethod">
+    <property name="scope" value="public"/>
+    <property name="allowMissingParamTags" value="true"/>
+    <property name="allowMissingReturnTag" value="true"/>
+  </module>
+  
+  <!-- 命名规范 -->
+  <module name="TypeName">
+    <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF"/>
+    <message key="name.invalidPattern" value="类型名 ''{0}'' 必须符合驼峰命名规范 (大驼峰)。"/>
+  </module>
+  
+  <module name="MethodName">
+    <message key="name.invalidPattern" value="方法名 ''{0}'' 必须符合驼峰命名规范 (小驼峰)。"/>
+  </module>
+  
+  <module name="ParameterName">
+    <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+    <message key="name.invalidPattern" value="参数名 ''{0}'' 必须以小写字母开头。"/>
+  </module>
+  
+  <!-- 导入语句检查 -->
+  <module name="AvoidStarImport">
+    <property name="allowStaticMemberImports" value="true"/>
+  </module>
+  
+  <module name="UnusedImports">
+    <property name="processJavadoc" value="true"/>
+  </module>
+  
+  <!-- 空行检查 -->
+  <module name="EmptyLineSeparator">
+    <property name="allowMultipleEmptyLines" value="false"/>
+    <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
+    <property name="tokens" value="PACKAGE_DEF, IMPORT, STATIC_IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF"/>
+  </module>
+  
+  <!-- 空白行检查 -->
+  <module name="NoLineWrap"/>
+  
+  <!-- 左花括号检查 -->
+  <module name="LeftCurly">
+    <property name="option" value="eol"/>
+  </module>
+  
+  <!-- 右花括号检查 -->
+  <module name="RightCurly">
+    <property name="option" value="same"/>
+    <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT"/>
+  </module>
+  
+  <!-- 分号检查 -->
+  <module name="NeedBraces">
+    <property name="tokens" value="LITERAL_IF, LITERAL_ELSE, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO"/>
+  </module>
+  
+  <!-- 冗余修饰符检查 -->
+  <module name="RedundantModifier"/>
+  
+  <!-- 最终变量检查 -->
+  <module name="FinalLocalVariable">
+    <property name="validateEnhancedForLoopVariable" value="true"/>
+  </module>
+  
+  <!-- ========================================================================= -->
+  <!-- 文件大小和复杂度检查 -->
+  <!-- ========================================================================= -->
+  
+  <!-- 文件行数限制 -->
+  <module name="FileLength">
+    <property name="max" value="800"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  
+  <!-- 方法行数限制 -->
+  <module name="MethodLength">
+    <property name="max" value="80"/>
+    <property name="tokens" value="METHOD_DEF, CTOR_DEF"/>
+  </module>
+  
+  <!-- 方法参数数量限制 -->
+  <module name="ParameterNumber">
+    <property name="max" value="7"/>
+    <property name="tokens" value="METHOD_DEF, CTOR_DEF"/>
+  </module>
+  
+  <!-- 圈复杂度检查 -->
+  <module name="JavaNCSS">
+    <property name="methodMaximum" value="50"/>
+    <property name="classMaximum" value="1000"/>
+    <property name="fileMaximum" value="1200"/>
+  </module>
+  
+  <!-- 嵌套深度检查 -->
+  <module name="NestedDepth">
+    <property name="max" value="4"/>
+  </module>
+  
+  <!-- ========================================================================= -->
+  <!-- 响应式编程最佳实践检查 -->
+  <!-- ========================================================================= -->
+  
+  <!-- 规则 6: 建议使用 Mono.justOrEmpty 而不是 Mono.just(null) -->
+  <module name="RegexpSingleline">
+    <property name="id" value="MonoJustNull"/>
+    <property name="format" value="Mono\.just\(null\)"/>
+    <property name="message" value="禁止使用 Mono.just(null)! 请使用 Mono.justOrEmpty(value) 或 Mono.empty()。"/>
+    <property name="severity" value="error"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  
+  <!-- 规则 7: 建议使用 switchIfEmpty 而不是 if-else 判断 empty -->
+  <module name="RegexpSingleline">
+    <property name="id" value="ManualEmptyCheck"/>
+    <property name="format" value="if\s*\(\s*[a-zA-Z_]+\.isPresent\(\)\s*\)"/>
+    <property name="message" value="建议使用响应式操作符如 switchIfEmpty 代替手动 empty 检查。"/>
+    <property name="severity" value="warning"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  
+  <!-- 规则 8: RPC 调用必须有异常处理 -->
+  <module name="RegexpSingleline">
+    <property name="id" value="RpcMissingErrorHandling"/>
+    <property name="format" value="rpcClient\.execute\([^)]*\)(?!\.*(?:onErrorResume|onErrorReturn|doOnError))"/>
+    <property name="message" value="RPC 调用必须包含异常处理！请添加 onErrorResume、onErrorReturn 或 doOnError。"/>
+    <property name="severity" value="error"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  
+  <!-- ========================================================================= -->
+  <!-- 文件和编码检查 -->
+  <!-- ========================================================================= -->
+  
+  <!-- 文件末尾换行检查 -->
+  <module name="NewlineAtEndOfFile">
+    <property name="lineSeparator" value="lf"/>
+  </module>
+  
+  <!-- 文件编码检查 -->
+  <module name="Translation"/>
+  
+  <!-- 文件长度检查 -->
+  <module name="FileLength">
+    <property name="max" value="2000"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  
+  <!-- 行长度检查 -->
+  <module name="LineLength">
+    <property name="max" value="150"/>
+    <property name="ignorePattern" value="^package.*|^import.*|http://|https://"/>
+  </module>
+  
+  <!-- ========================================================================= -->
+  <!-- 补充检查 -->
+  <!-- ========================================================================= -->
+  
+  <!-- 避免重复代码 -->
+  <module name="RegexpMultiline">
+    <property name="id" value="DuplicateCode"/>
+    <property name="format" value="(?s)(.{50,})\1"/>
+    <property name="message" value="发现可能的重复代码，请考虑提取为公共方法。"/>
+    <property name="severity" value="warning"/>
+  </module>
+  
+  <!-- TODO 注释检查 -->
+  <module name="TodoComment">
+    <property name="format" value="TODO"/>
+    <property name="severity" value="info"/>
+  </module>
+  
+  <!-- FIXME 注释检查 -->
+  <module name="TodoComment">
+    <property name="format" value="FIXME"/>
+    <property name="severity" value="warning"/>
+  </module>
+  
+  <!-- XXX 注释检查 -->
+  <module name="TodoComment">
+    <property name="format" value="XXX"/>
+    <property name="severity" value="warning"/>
+  </module>
+  
+</module>

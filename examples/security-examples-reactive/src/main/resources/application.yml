@@ -1,0 +1,36 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: security-reactive-example
+
+# Aryee Security 配置
+aryee:
+  security:
+    enabled: true
+    jwt:
+      secret: aryee-security-example-jwt-secret-key-please-change-in-production
+      access-token-expiration: 3600
+      refresh-token-expiration: 86400
+      blacklist-enabled: true
+    password-policy:
+      min-length: 8
+      max-length: 32
+      require-lowercase: true
+      require-uppercase: true
+      require-digit: true
+      require-special-char: false
+      validity-days: 90
+      max-attempts: 5
+      history-check-count: 5
+    session-policy:
+      user-max-sessions: 3
+      idle-timeout-minutes: 30
+      absolute-timeout-hours: 12
+    auth:
+      mfa-enabled: false
+      account-lock-enabled: true
+      max-login-attempts: 5
+      lock-duration-minutes: 30
+      login-log-enabled: true

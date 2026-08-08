@@ -1,0 +1,35 @@
+# Aryee Database Reactive 示例应用配置
+spring:
+  application:
+    name: database-examples-reactive
+
+  # R2DBC 配置（MySQL）
+  r2dbc:
+    url: r2dbc:mysql://192.168.0.176:3306/aryee_test?ssl=false
+    username: root
+    password: x!123456
+    pool:
+      max-size: 5
+      initial-size: 1
+      max-idle-time: 30m
+
+# Aryee Database 配置（Reactive 模式）
+aryee:
+  database:
+    enabled: true
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.database: DEBUG
+    cn.aryee.examples: INFO
+    org.springframework.r2dbc: DEBUG
+
+# 服务器配置（WebFlux）
+server:
+  port: 8084
+
+# 禁用 SQL 自动初始化（r2dbc-mysql DDL 返回 Integer 触发 ClassCastException Bug）
+# 表结构由测试类通过 DatabaseClient 手动管理
+spring.sql.init:
+  mode: never

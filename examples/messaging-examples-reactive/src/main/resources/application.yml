@@ -1,0 +1,29 @@
+# Aryee Messaging Reactive 示例应用配置
+spring:
+  application:
+    name: messaging-examples-reactive
+
+  # RabbitMQ 连接配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: a123456
+    virtual-host: /
+
+# Aryee Messaging 配置（Reactive 模式）
+aryee:
+  messaging:
+    enabled: true
+    type: rabbitmq
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.messaging: DEBUG
+    cn.aryee.examples: INFO
+    reactor.rabbitmq: DEBUG
+
+# 服务器配置（WebFlux）
+server:
+  port: 8083

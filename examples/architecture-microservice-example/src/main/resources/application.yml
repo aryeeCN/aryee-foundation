@@ -1,0 +1,106 @@
+# 微服务架构形态示例应用配置
+# 需要 Nacos + MySQL + Redis 等外部中间件
+spring:
+  application:
+    name: architecture-microservice-example
+
+  # MySQL 数据源（微服务架构使用外部数据库）
+  datasource:
+    url: jdbc:mysql://localhost:3306/aryee_microservice?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+  # JPA 配置
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  # Redis 配置（分布式缓存）
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      timeout: 5s
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 4
+          min-idle: 0
+
+# Nacos 配置中心
+aryee:
+  config:
+    enabled: true
+    # Nacos 配置源适配（通过 Nacos Config 实现 ConfigurationSourceProvider SPI）
+    # 使用 Nacos 作为微服务架构的配置中心
+
+  # 缓存：Redis 分布式缓存
+  cache:
+    enabled: true
+    type: redis
+    key-prefix: ms:order
+    default-expiration: 3600
+
+  # 传输层：Nacos 服务发现
+  transport:
+    discovery:
+      type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: public
+      group: DEFAULT_GROUP
+
+  # 事务：Seata 分布式事务
+  transaction:
+    enabled: true
+    type: seata
+
+  # 调度：XXL-Job 分布式调度
+  scheduler:
+    type: xxl-job
+    xxl-job:
+      admin-addresses: http://localhost:8088/xxl-job-admin
+      access-token: default_token
+      executor:
+        app-name: order-service-executor
+        port: 9999
+        log-retention-days: 7
+
+# Seata 配置
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  tx-service-group: default_tx_group
+  service:
+    vgroup-mapping:
+      default_tx_group: default
+    grouplist:
+      default: localhost:8091
+  config:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: public
+      group: SEATA_GROUP
+  registry:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: public
+      group: DEFAULT_GROUP
+      application: seata-server
+
+# 服务器配置
+server:
+  port: 8080
+
+# 日志级别
+logging:
+  level:
+    cn.aryee: INFO
+    io.seata: DEBUG
+    com.alibaba.nacos: INFO

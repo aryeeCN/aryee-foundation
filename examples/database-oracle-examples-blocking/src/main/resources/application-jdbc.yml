@@ -1,0 +1,67 @@
+# Aryee Database Blocking 示例应用配置 - JDBC (MyBatis-Plus) 模式 - Oracle
+spring:
+  application:
+    name: database-oracle-examples-blocking-jdbc
+
+  # 禁用 JPA/Hibernate 自动配置，避免与 MyBatis-Plus 冲突
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration
+
+  # DataSource 配置（Oracle 23ai Free）
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/FREE
+    username: system
+    password: oracle
+    driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      connection-timeout: 10000
+
+  # SQL 初始化脚本（Oracle 使用 / 分隔符支持 PL/SQL 块）
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-jdbc.sql
+      continue-on-error: true
+      encoding: UTF-8
+      separator: "/"
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 全局配置
+  global-config:
+    # 数据库配置
+    db-config:
+      # 主键 ID 策略：ASSIGN_ID 由 MyBatis-Plus 分配雪花 ID
+      id-type: assign-id
+      # 表名下划线转驼峰
+      table-underline: true
+      # 逻辑删除配置
+      logic-delete-field: deleted
+      logic-delete-value: true
+      logic-not-delete-value: false
+  # Mapper 扫描
+  mapper-locations: classpath*:mapper/**/*.xml
+
+# Aryee Database 配置（Blocking 模式）
+aryee:
+  database:
+    enabled: true
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.database: DEBUG
+    cn.aryee.examples: DEBUG
+    com.baomidou.mybatisplus: DEBUG
+
+# 服务器配置
+server:
+  port: 8085

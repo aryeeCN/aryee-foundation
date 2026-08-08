@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>architecture-monolith-example</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Aryee Examples - Architecture Monolith</name>
+    <description>
+        单体架构形态示例 —— 演示 bom-full 版本管理 + 按需组合模块 Starter 开箱即用。
+        零外部依赖，H2 嵌入式数据库 + Caffeine 本地缓存 + 本地文件存储 + Quartz 进程内调度。
+    </description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>4.0.7</spring.boot.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.aryee.foundation</groupId>
+                <artifactId>bom-full</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- ========== 单体架构推荐模块组合（bom-full 管版本，此处无需写 version） ========== -->
+
+        <!-- 公共 Web 模块 -->
+        <dependency>
+            <groupId>cn.aryee.foundation</groupId>
+            <artifactId>commons-web</artifactId>
+        </dependency>
+
+        <!-- 缓存模块 -->
+        <dependency>
+            <groupId>cn.aryee.foundation</groupId>
+            <artifactId>cache-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 数据库模块 -->
+        <dependency>
+            <groupId>cn.aryee.foundation</groupId>
+            <artifactId>database-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 存储模块 -->
+        <dependency>
+            <groupId>cn.aryee.foundation</groupId>
+            <artifactId>storage-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 事件模块 -->
+        <dependency>
+            <groupId>cn.aryee.foundation</groupId>
+            <artifactId>event-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 调度模块 -->
+        <dependency>
+            <groupId>cn.aryee.foundation</groupId>
+            <artifactId>scheduler-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 安全模块 -->
+        <dependency>
+            <groupId>cn.aryee.foundation</groupId>
+            <artifactId>security-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 通信模块 -->
+        <dependency>
+            <groupId>cn.aryee.foundation</groupId>
+            <artifactId>transport-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 事务模块 -->
+        <dependency>
+            <groupId>cn.aryee.foundation</groupId>
+            <artifactId>transaction-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- ========== Spring Boot & 第三方 ========== -->
+
+        <!-- Spring Boot Web (Blocking/WebMVC 场景) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Spring Data JPA (配合 H2 使用) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Spring Boot Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>21</release>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

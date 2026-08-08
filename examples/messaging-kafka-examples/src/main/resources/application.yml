@@ -1,0 +1,35 @@
+# Aryee Messaging Kafka Blocking 示例应用配置
+spring:
+  application:
+    name: messaging-kafka-examples
+
+# Kafka 连接配置
+kafka:
+  bootstrap-servers: localhost:29092
+  producer:
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    acks: all
+    retries: 3
+  consumer:
+    group-id: aryee-kafka-test-group
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    auto-offset-reset: earliest
+
+# Aryee Messaging 配置（Blocking 模式）
+aryee:
+  messaging:
+    enabled: true
+    type: kafka
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.messaging: DEBUG
+    cn.aryee.examples: INFO
+    org.springframework.kafka: INFO
+
+# 服务器配置
+server:
+  port: 8088

@@ -1,0 +1,24 @@
+# Aryee Messaging Kafka Reactive 示例应用配置
+spring:
+  application:
+    name: messaging-kafka-examples-reactive
+
+# Kafka 连接配置
+kafka:
+  bootstrap-servers: localhost:29092
+
+# Aryee Messaging 配置（Reactive 模式）
+aryee:
+  messaging:
+    enabled: true
+    type: kafka
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.messaging: DEBUG
+    cn.aryee.examples: INFO
+
+# 服务器配置（WebFlux）
+server:
+  port: 8089

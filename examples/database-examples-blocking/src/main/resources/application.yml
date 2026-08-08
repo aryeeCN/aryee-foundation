@@ -1,0 +1,41 @@
+# Aryee Database Blocking 示例应用配置
+spring:
+  application:
+    name: database-examples-blocking
+
+  # JPA / DataSource 配置（MySQL）
+  datasource:
+    url: jdbc:mysql://192.168.0.176:3306/aryee_test?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: x!123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      connection-timeout: 10000
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # 测试时自动建表，结束销毁
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# Aryee Database 配置（Blocking 模式）
+aryee:
+  database:
+    enabled: true
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.database: DEBUG
+    cn.aryee.examples: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# 服务器配置
+server:
+  port: 8083

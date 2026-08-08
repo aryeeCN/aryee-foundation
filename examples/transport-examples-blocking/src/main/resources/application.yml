@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /transport-blocking
+
+spring:
+  application:
+    name: transport-examples-blocking
+
+# Aryee Transport 配置
+aryee:
+  transport:
+    enabled: true
+    cors-enabled: true
+    request-log-enabled: true
+    default-client-type: FEIGN
+    default-timeout-ms: 10000
+
+logging:
+  level:
+    cn.aryee.transport: DEBUG
+    cn.aryee.examples.transport: INFO

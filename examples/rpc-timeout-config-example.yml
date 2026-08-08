@@ -1,0 +1,389 @@
+# Aryee RPC 超时配置示例
+
+## 📋 配置文件说明
+
+本文档提供了 Aryee RPC 模块的完整配置示例，帮助开发者快速上手。
+
+---
+
+## application.yml 完整配置
+
+```yaml
+aryee:
+  rpc:
+    # 超时配置
+   timeout:
+      # 默认超时时间 (毫秒)
+     default-timeout: 5000
+      
+      # 连接超时时间 (毫秒)
+      connection-timeout: 3000
+      
+      # 读取超时时间 (毫秒)
+      read-timeout: 10000
+      
+      # 是否启用动态超时
+      dynamic-enabled: true
+      
+      # 最大超时时间 (毫秒)
+      max-timeout: 60000
+      
+      # 最小超时时间 (毫秒)
+      min-timeout: 100
+      
+      # 按服务配置的超时时间
+      per-service-timeouts:
+        # 用户服务 - 8 秒
+        user-service: 8000
+        
+        # 订单服务 - 12 秒
+        order-service: 12000
+        
+        # 支付服务 - 15 秒
+        payment-service: 15000
+        
+        # 通知服务 - 5 秒
+        notification-service: 5000
+        
+        # 报表服务 - 30 秒 (批处理)
+        report-service: 30000
+    
+    # 重试配置
+    retry:
+      # 是否启用重试
+      enabled: true
+      
+      # 最大重试次数
+      max-attempts: 3
+      
+      # 初始退避时间 (毫秒)
+      initial-interval: 1000
+      
+      # 最大退避时间 (毫秒)
+      max-interval: 10000
+      
+      # 退避乘数 (指数增长系数)
+      multiplier: 2.0
+      
+      # 随机抖动系数 (0-1)
+      jitter: 0.5
+    
+    # 熔断配置 (如果使用 Resilience4j)
+    circuit-breaker:
+      # 是否启用熔断器
+      enabled: false
+      
+      # 滑动窗口大小
+      sliding-window-size: 10
+      
+      # 失败率阈值 (%)
+      failure-rate-threshold: 50
+      
+      # 慢调用阈值 (毫秒)
+      slow-call-duration-threshold: 3000
+      
+      # 半开状态等待时间 (秒)
+      wait-duration-in-open-state: 30
+      
+      # 半开状态测试调用次数
+      permitted-number-of-calls-in-half-open-state: 5
+```
+
+---
+
+## 按环境配置
+
+### 开发环境 (application-dev.yml)
+
+```yaml
+aryee:
+  rpc:
+   timeout:
+     default-timeout: 10000  # 开发环境放宽到 10 秒
+      connection-timeout: 5000
+      read-timeout: 20000
+      dynamic-enabled: true
+      per-service-timeouts:
+        user-service: 15000
+        order-service: 20000
+```
+
+### 测试环境 (application-test.yml)
+
+```yaml
+aryee:
+  rpc:
+   timeout:
+     default-timeout: 8000
+      connection-timeout: 4000
+      read-timeout: 15000
+      dynamic-enabled: true
+      per-service-timeouts:
+        user-service: 10000
+        order-service: 15000
+```
+
+### 生产环境 (application-prod.yml)
+
+```yaml
+aryee:
+  rpc:
+   timeout:
+     default-timeout: 5000   # 生产环境严格控制在 5 秒
+      connection-timeout: 2000
+      read-timeout: 10000
+      dynamic-enabled: true
+      max-timeout: 30000      # 最大 30 秒
+      min-timeout: 500        # 最小 500 毫秒
+      per-service-timeouts:
+        # 核心服务优先保证响应速度
+        user-service: 6000
+        order-service: 8000
+        payment-service: 10000
+        
+        # 非核心服务可以适当放宽
+        notification-service: 5000
+        report-service: 20000
+```
+
+---
+
+## 代码中使用
+
+### 方式一：注入 RpcTimeoutManager
+
+```java
+@Service
+public class MyRpcService {
+    
+    @Autowired
+    private RpcTimeoutManager timeoutManager;
+    
+    @Autowired
+    private ReactiveRpcClient rpcClient;
+    
+   public Mono<RpcResponse> callService(String serviceName, Object data) {
+        RpcRequest request = new RpcRequest();
+        request.setServiceName(serviceName);
+        request.setData(data);
+        
+        // 应用配置的超时
+       timeoutManager.applyTimeout(request);
+        
+        return rpcClient.execute(request)
+            .timeout(timeoutManager.getTimeout(request))
+            .onErrorResume(RpcExceptionHandler.errorHandler(request));
+    }
+}
+```
+
+### 方式二：直接使用 RpcTimeoutProperties
+
+```java
+@Service
+public class MyService {
+    
+    @Autowired
+    private RpcTimeoutProperties timeoutProperties;
+    
+   public void doSomething() {
+        // 获取默认超时
+        Duration defaultTimeout = timeoutProperties.getDefaultTimeout();
+        
+        // 获取特定服务的超时
+        Duration userSvcTimeout = timeoutProperties.getTimeoutForService("user-service");
+        
+        // 验证超时时间是否有效
+        boolean isValid = timeoutProperties.isValidTimeout(Duration.ofSeconds(10));
+    }
+}
+```
+
+---
+
+## 最佳实践建议
+
+### 1. 超时设置原则
+
+**3-6-9 法则:**
+- **读操作**: 3 秒 (查询、获取信息)
+- **写操作**: 6 秒 (创建、更新、删除)
+- **批处理**: 9 秒 (报表、导入导出)
+
+### 2. 不同服务的超时建议
+
+| 服务类型 | 推荐超时 | 说明 |
+|---------|---------|------|
+| **用户服务** | 6-8 秒 | 核心业务，需要快速响应 |
+| **订单服务** | 8-12 秒 | 涉及多个系统调用 |
+| **支付服务** | 10-15 秒 | 依赖第三方，耗时较长 |
+| **通知服务** | 3-5 秒 | 简单操作，快速失败 |
+| **报表服务** | 20-30 秒 | 批处理，允许较长时间 |
+| **文件服务** | 15-20 秒 | 文件上传下载 |
+
+### 3. 超时与重试配合
+
+```yaml
+aryee:
+  rpc:
+   timeout:
+     default-timeout: 5000
+    retry:
+      max-attempts: 3
+      initial-interval: 1000
+```
+
+**总耗时计算:**
+```
+第一次：5s (超时)
+等待：1s
+第二次：5s (超时)
+等待：2s
+第三次：5s (成功或失败)
+
+最坏情况：5 +1 +5 +2 + 5 = 18 秒
+```
+
+### 4. 监控告警配置
+
+```yaml
+# Prometheus 监控指标
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# 告警规则示例
+# 规则 1: RPC 超时率 > 5%
+# 规则 2: P99 延迟 > 10 秒
+# 规则 3: 熔断器打开
+```
+
+---
+
+## 常见问题 FAQ
+
+### Q1: 为什么设置了超时不生效？
+
+**A:**检查以下几点:
+1. 确认 `dynamic-enabled` 是否为 `true`
+2. 确认请求中的 `serviceName` 是否与配置一致
+3. 查看日志是否有 `RpcTimeoutManager` 的 debug 输出
+
+### Q2: 如何为不同的方法设置不同的超时？
+
+**A:** 有两种方式:
+```java
+// 方式 1: 在请求中直接指定
+RpcRequest request = new RpcRequest();
+request.setTimeout(10000L); // 10 秒
+
+// 方式 2: 使用不同的服务名称区分
+request.setServiceName("user-service-read");   // 读操作 3 秒
+request.setServiceName("user-service-write");  // 写操作 6 秒
+```
+
+### Q3: 超时时间设置多少合适？
+
+**A:** 参考以下步骤:
+1. 统计历史调用的 P95、P99 延迟
+2. 设置为 P99 延迟的 1.5-2 倍
+3. 考虑业务可接受的最大等待时间
+4. 预留 20-30% 的余量
+
+**示例:**
+```
+P95 延迟：2 秒
+P99 延迟：3 秒
+建议超时：3 * 1.5 = 4.5 秒 → 取整 5 秒
+```
+
+### Q4: 如何在运行时动态调整超时？
+
+**A:** 结合配置中心 (如 Nacos、Apollo):
+```java
+@Component
+public class DynamicTimeoutConfig {
+    
+    @Value("${aryee.rpc.timeout.default-timeout:5000}")
+    private long defaultTimeout;
+    
+    @PostConstruct
+   public void init() {
+        // 监听配置变化
+        configChangeListener.registerListener(event -> {
+            String newValue = event.getPropertyValue();
+           timeoutProperties.setDefaultTimeout(Duration.ofMillis(Long.parseLong(newValue)));
+        });
+    }
+}
+```
+
+---
+
+## 监控指标
+
+### Micrometer 指标
+
+```java
+// 自动注册的指标
+rpc.requests.total          // RPC 请求总数
+rpc.requests.success        // 成功次数
+rpc.requests.failed         // 失败次数
+rpc.requests.timeout        // 超时次数
+
+rpc.duration.seconds        // 调用延迟分布
+rpc.duration.seconds.max    // 最大延迟
+rpc.duration.seconds.p95    // P95 延迟
+rpc.duration.seconds.p99    // P99 延迟
+```
+
+### Grafana 仪表盘示例
+
+```json
+{
+  "title": "RPC 监控",
+  "panels": [
+    {
+      "title": "RPC 请求成功率",
+      "targets": [
+        {
+          "expr": "sum(rpc_requests_success) / sum(rpc_requests_total) * 100"
+        }
+      ]
+    },
+    {
+      "title": "P99 延迟趋势",
+      "targets": [
+        {
+          "expr": "rpc_duration_seconds_p99"
+        }
+      ]
+    },
+    {
+      "title": "超时率",
+      "targets": [
+        {
+          "expr": "sum(rpc_requests_timeout) / sum(rpc_requests_total) * 100"
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## 相关文档
+
+- [RpcTimeoutProperties API](file:///Users/aryee/code/aryee-foundation/aryee-rpc/rpc-api/src/main/java/cn/aryee/rpc/api/config/RpcTimeoutProperties.java)
+- [RpcTimeoutManager API](file:///Users/aryee/code/aryee-foundation/aryee-rpc/rpc-api/src/main/java/cn/aryee/rpc/api/config/RpcTimeoutManager.java)
+- [RpcExceptionHandler API](file:///Users/aryee/code/aryee-foundation/aryee-rpc/rpc-api/src/main/java/cn/aryee/rpc/api/util/RpcExceptionHandler.java)
+- [IMPLEMENTATION_COMPLETION_REPORT.md](file:///Users/aryee/code/aryee-foundation/IMPLEMENTATION_COMPLETION_REPORT.md)
+
+---
+
+**最后更新:** 2026-03-10  
+**版本:** v1.0  
+**维护者:** Aryee 架构组

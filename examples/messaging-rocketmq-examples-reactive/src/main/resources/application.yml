@@ -1,0 +1,28 @@
+# Aryee Messaging RocketMQ Reactive 示例应用配置
+spring:
+  application:
+    name: messaging-rocketmq-examples-reactive
+
+# RocketMQ 连接配置（rocketmq-spring-boot-starter 使用 rocketmq.* 前缀）
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    group: aryee-messaging-reactive-producer
+    send-message-timeout: 30000
+
+# Aryee Messaging 配置（Reactive 模式）
+aryee:
+  messaging:
+    enabled: true
+    type: rocketmq
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.messaging: DEBUG
+    cn.aryee.examples: INFO
+    org.apache.rocketmq: DEBUG
+
+# 服务器配置（WebFlux）
+server:
+  port: 8085

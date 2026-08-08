@@ -1,0 +1,21 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: tenant-reactive-examples
+
+aryee:
+  tenant:
+    enabled: true
+    mode: ROW
+    tenant-id-column: tenant_id
+    tenant-id-header: X-Tenant-Id
+    default-tenant-id: system
+    allow-empty-tenant-id: true
+    validation-enabled: true
+    validation-cache-ttl: 300000
+
+logging:
+  level:
+    cn.aryee.tenant: DEBUG

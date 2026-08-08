@@ -1,0 +1,34 @@
+# Aryee Database Reactive 示例应用配置 - Oracle
+spring:
+  application:
+    name: database-oracle-examples-reactive
+
+  # R2DBC 配置（Oracle 23ai Free）
+  r2dbc:
+    url: r2dbc:oracle://localhost:1521/FREE
+    username: system
+    password: oracle
+    pool:
+      max-size: 5
+      initial-size: 1
+      max-idle-time: 30m
+
+# Aryee Database 配置（Reactive 模式）
+aryee:
+  database:
+    enabled: true
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.database: DEBUG
+    cn.aryee.examples: INFO
+    org.springframework.r2dbc: DEBUG
+
+# 服务器配置（WebFlux）
+server:
+  port: 8085
+
+# 禁用 SQL 自动初始化（表结构由测试类通过 DatabaseClient 手动管理）
+spring.sql.init:
+  mode: never

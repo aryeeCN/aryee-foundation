@@ -1,0 +1,63 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: scheduler-examples-reactive
+
+# Aryee Scheduler Reactive 配置
+aryee:
+  scheduler:
+    enabled: true
+    type: quartz
+
+    # 线程池配置
+    thread-pool:
+      pool-size: 10
+      thread-priority: 5
+      daemon: true
+
+    # 集群配置（单机模式下关闭）
+    cluster:
+      enabled: false
+      checkin-interval-ms: 20000
+      node-timeout-ms: 60000
+
+    # 重试默认配置
+    retry:
+      max-retries: 3
+      retry-interval-ms: 5000
+
+    # 存储配置
+    storage:
+      table-prefix: "QRTZ_"
+
+    # 监控配置
+    monitoring:
+      enabled: true
+      metrics-interval-ms: 60000
+
+    # 执行日志配置
+    execution-log:
+      enabled: true
+      retention-days: 30
+
+    # DAG 依赖配置
+    dag:
+      enabled: true
+      max-dependency-depth: 10
+
+    # 分片配置
+    sharding:
+      enabled: false
+      shard-count: 1
+
+    # 多租户配置
+    multi-tenant:
+      enabled: false
+
+logging:
+  level:
+    cn.aryee.scheduler: DEBUG
+    cn.aryee.examples.scheduler: INFO
+    org.quartz: INFO

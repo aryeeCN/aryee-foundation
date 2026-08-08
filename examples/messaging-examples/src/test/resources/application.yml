@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: aryee-messaging-examples
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: a123456
+    virtual-host: /
+
+aryee:
+  messaging:
+    enabled: true
+    type: rabbitmq
+
+logging:
+  level:
+    cn.aryee.messaging: DEBUG
+    org.springframework.amqp: DEBUG

@@ -1,0 +1,65 @@
+# 云原生架构形态示例应用配置
+# K8s 环境开箱即用，ConfigMap 配置热刷新
+spring:
+  application:
+    name: architecture-cloudnative-example
+
+  # Actuator 健康检查（K8s 就绪探针/存活探针）
+  boot:
+    admin:
+      client:
+        enabled: false
+
+# 统一配置源（K8s ConfigMap 热刷新）
+aryee:
+  config:
+    enabled: true
+    kubernetes:
+      enabled: true
+      config-map-name: aryee-foundation-config
+      refresh-interval-seconds: 30
+
+  # 静态服务发现（云原生环境通过 K8s Service 发现，Static 兜底）
+  transport:
+    discovery:
+      type: static
+
+  # 本地事务（默认）
+  transaction:
+    enabled: true
+    type: local
+
+  # 本地缓存（Caffeine）
+  cache:
+    enabled: true
+    type: caffeine
+    default-expiration: 3600
+
+# 监控（OpenTelemetry）
+otel:
+  traces:
+    exporter: none
+  metrics:
+    exporter: none
+  logs:
+    exporter: none
+
+# 服务器配置
+server:
+  port: 8080
+
+# 管理端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# 日志级别
+logging:
+  level:
+    cn.aryee: INFO
+    cn.aryee.commons.spring.config: DEBUG

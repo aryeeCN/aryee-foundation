@@ -1,0 +1,67 @@
+# Aryee Database Blocking 示例应用配置 - JDBC (MyBatis-Plus) 模式
+spring:
+  application:
+    name: database-examples-blocking-jdbc
+
+  # 禁用 JPA/Hibernate 自动配置，避免与 MyBatis-Plus 冲突
+  # JDBC 模式仅使用 MyBatis-Plus，不需要 Hibernate
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration
+
+  # DataSource 配置（MySQL - 使用独立数据库避免与 JPA 测试冲突）
+  datasource:
+    url: jdbc:mysql://192.168.0.176:3306/aryee_test_jdbc?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: root
+    password: x!123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      connection-timeout: 10000
+
+  # SQL 初始化脚本 - Spring Boot 3.x 使用新配置路径
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-jdbc.sql
+      continue-on-error: true
+      encoding: UTF-8
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 全局配置
+  global-config:
+    # 数据库配置
+    db-config:
+      # 主键 ID 策略：ASSIGN_ID 由 MyBatis-Plus 分配雪花 ID
+      id-type: assign-id
+      # 表名下划线转驼峰
+      table-underline: true
+      # 逻辑删除配置
+      logic-delete-field: deleted
+      logic-delete-value: true
+      logic-not-delete-value: false
+  # Mapper 扫描
+  mapper-locations: classpath*:mapper/**/*.xml
+
+# Aryee Database 配置（Blocking 模式）
+aryee:
+  database:
+    enabled: true
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.database: DEBUG
+    cn.aryee.examples: DEBUG
+    com.baomidou.mybatisplus: DEBUG
+
+# 服务器配置
+server:
+  port: 8084

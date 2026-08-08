@@ -1,0 +1,28 @@
+# Aryee Storage MinIO Reactive 示例应用配置
+spring:
+  application:
+    name: storage-minio-examples-reactive
+
+# Aryee Storage 配置
+aryee:
+  storage:
+    enabled: true
+    default-type: minio
+    default-bucket: aryee-test
+    minio:
+      enabled: true
+      endpoint: http://localhost:9000
+      access-key: minio
+      secret-key: minio123
+      bucket: aryee-test
+      secure: false
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.storage: DEBUG
+    cn.aryee.examples: INFO
+
+# 服务器配置（WebFlux）
+server:
+  port: 8087

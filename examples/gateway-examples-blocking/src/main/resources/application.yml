@@ -1,0 +1,50 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: gateway-blocking-example
+
+# Aryee Gateway 配置
+aryee:
+  gateway:
+    enabled: true
+    rate-limit:
+      enabled: true
+      algorithm: tokenBucket
+      refill-rate: 10.0
+      max-burst: 20.0
+      capacity: 100.0
+      drain-rate: 5.0
+    circuit-breaker:
+      enabled: true
+      type: resilience4j
+      failure-rate-threshold: 50.0
+      slow-call-rate-threshold: 80.0
+      slow-call-duration-threshold: 5s
+      permitted-number-of-calls-in-half-open-state: 3
+      wait-duration-in-open-state: 30s
+      sliding-window-size: 10
+      sliding-window-type: COUNT_BASED
+      minimum-number-of-calls: 5
+    canary:
+      enabled: true
+      weight: 30
+      canary-url: http://localhost:9001/canary
+      main-url: http://localhost:9000/main
+      user-based-enabled: true
+      canary-users:
+        - user-001
+        - user-002
+      user-id-header: X-User-Id
+    aggregate:
+      enabled: true
+      execution-mode: parallel
+      timeout: 10s
+      core-pool-size: 4
+      max-pool-size: 8
+      queue-capacity: 100
+
+logging:
+  level:
+    cn.aryee.gateway: DEBUG

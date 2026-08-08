@@ -1,0 +1,52 @@
+# 单体架构形态示例应用配置
+# 零外部依赖，一行启动
+spring:
+  application:
+    name: architecture-monolith-example
+
+  # H2 嵌入式数据库（零外部依赖，自动装配）
+  datasource:
+    url: jdbc:h2:mem:aryee-monolith;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # JPA 自动建表
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  # H2 Console（开发调试用）
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# Aryee 缓存（Caffeine 本地缓存，默认）
+aryee:
+  cache:
+    enabled: true
+    type: caffeine
+    default-expiration: 3600
+
+  # 本地事务（默认）
+  transaction:
+    enabled: true
+    type: local
+
+  # 静态服务发现（单体架构无需注册中心）
+  transport:
+    discovery:
+      type: static
+
+# 服务器配置
+server:
+  port: 8080
+
+# 日志级别
+logging:
+  level:
+    cn.aryee: INFO
+    cn.aryee.examples: DEBUG

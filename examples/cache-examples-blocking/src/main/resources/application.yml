@@ -1,0 +1,50 @@
+# Aryee Cache Blocking 示例应用配置
+spring:
+  application:
+    name: cache-examples-blocking
+
+  # Redis 连接配置（使用 Redis 模式时需要）
+  # data:
+  #   redis:
+  #     host: 127.0.0.1
+  #     port: 6379
+  #     password: a123456
+  #     database: 0
+  #     timeout: 5s
+  #     lettuce:
+  #       pool:
+  #         max-active: 8
+  #         max-idle: 4
+  #         min-idle: 0
+  #         max-wait: 2s
+
+# Aryee Cache 配置（Blocking 模式）
+# 切换实现只需修改 type：
+#   memory  — 纯内存，无需外部依赖（默认，适合快速体验）
+#   redis   — Redis 分布式缓存（需取消上方 Redis 连接配置注释）
+#   caffeine — Caffeine 本地缓存（Window TinyLFU 算法）
+aryee:
+  cache:
+    enabled: true
+    type: memory
+    key-prefix: cache-examples-blocking
+    default-expiration: 3600
+    enable-statistics: true
+    observability-enabled: true
+    # 缓存穿透防护：缓存空值
+    cache-null-values: true
+    # 缓存雪崩防护：启用随机 TTL
+    randomize-ttl: true
+    ttl-random-factor: 0.1
+
+# 日志级别
+logging:
+  level:
+    cn.aryee.cache: DEBUG
+    cn.aryee.examples: INFO
+    org.springframework.data.redis: INFO
+    io.lettuce: INFO
+
+# 服务器配置
+server:
+  port: 8081

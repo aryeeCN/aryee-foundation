@@ -1,0 +1,145 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: gateway-reactive-example
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+  cloud:
+    gateway:
+      enabled: true
+      # 路由配置（内存模式，不依赖 Nacos）
+      routes:
+        - id: demo-service
+          uri: http://httpbin.org
+          predicates:
+            - Path=/demo/**
+          filters:
+            - StripPrefix=1
+        - id: auth-service
+          uri: http://httpbin.org
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+      default-filters:
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 20
+
+# Aryee Gateway 配置
+aryee:
+  gateway:
+    enabled: true
+    rate-limit:
+      enabled: true
+      algorithm: tokenBucket
+      refill-rate: 10.0
+      max-burst: 20.0
+      capacity: 100.0
+      drain-rate: 5.0
+    circuit-breaker:
+      enabled: true
+      type: resilience4j
+      failure-rate-threshold: 50.0
+      slow-call-rate-threshold: 80.0
+      slow-call-duration-threshold: 5s
+      permitted-number-of-calls-in-half-open-state: 3
+      wait-duration-in-open-state: 30s
+      sliding-window-size: 10
+      sliding-window-type: COUNT_BASED
+      minimum-number-of-calls: 5
+    canary:
+      enabled: true
+      weight: 30
+      canary-url: http://localhost:9001/canary
+      main-url: http://localhost:9000/main
+      user-based-enabled: true
+      canary-users:
+        - user-001
+        - user-002
+      user-id-header: X-User-Id
+    aggregate:
+      enabled: true
+      execution-mode: parallel
+      timeout: 10s
+      core-pool-size: 4
+      max-pool-size: 8
+      queue-capacity: 100
+
+# Sa-Token 配置
+sa-token:
+  token-name: saasToken
+  timeout: 2592000
+  active-timeout: -1
+  is-concurrent: true
+  is-share: true
+  token-style: uuid
+  is-log: false
+  gateway:
+    excludes:
+      - /favicon.ico
+      - /
+      - /doc.html
+      - /swagger-ui.html
+      - /v3/api-docs
+      - /v3/api-docs/**
+      - /v2/api-docs
+      - /v2/api-docs/**
+      - /swagger-resources
+      - /swagger-resources/**
+      - /webjars/**
+      - /knife4j/**
+    open-paths:
+      - /auth/login
+      - /auth/login/**
+      - /auth/wechat/**
+      - /*/external/**
+      - /*/anon/**
+      - /*/v3/api-docs/**
+      - /*/doc.html
+      - /*/swagger-ui.html
+      - /knife4j/**
+      - /test/**
+      - /local/**
+
+# 转发认证配置
+gateway:
+  forward-auth:
+    exclude-paths:
+      - /favicon.ico
+      - /doc.html
+      - /swagger-ui.html
+      - /swagger-ui/**
+      - /v2/api-docs
+      - /v2/api-docs/**
+      - /v3/api-docs
+      - /v3/api-docs/**
+      - /webjars/**
+      - /swagger-resources
+      - /swagger-resources/**
+      - /knife4j/**
+      - /auth/login
+      - /auth/login/**
+      - /auth/wechat/**
+      - /*/external/**
+      - /*/anon/**
+  signature:
+    enabled: false
+    credentials: AK123456=SK123456,AK789012=SK789012
+    timestamp-validity: 300
+    nonce-store-seconds: 600
+  route:
+    enabled: false
+    data-id: gateway-routes
+    group: DEFAULT_GROUP
+
+logging:
+  level:
+    cn.aryee.gateway: DEBUG
+    cn.aryee.examples.gateway: DEBUG
+    org.springframework.cloud.gateway: INFO

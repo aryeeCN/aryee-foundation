@@ -1,0 +1,20 @@
+# 测试专用配置（@ActiveProfiles("test")）
+# 该示例的集成测试面向 Redis 实现，这里显式切换 type=redis 并接入本地 Redis，
+# 覆盖主配置 application.yml 中的 type: memory 默认值。
+spring:
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: a123456
+      database: 0
+      timeout: 5s
+
+aryee:
+  cache:
+    enabled: true
+    type: redis
+    key-prefix: cache-examples-blocking-test
+    # 关闭随机 TTL，保证过期时间相关断言精确可复现
+    randomize-ttl: false
+    cache-null-values: true
