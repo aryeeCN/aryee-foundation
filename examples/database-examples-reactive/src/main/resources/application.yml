@@ -27,7 +27,7 @@ logging:
 
 # 服务器配置（WebFlux）
 server:
-  port: 8084
+  port: 8089
 
 # 禁用 SQL 自动初始化（r2dbc-mysql DDL 返回 Integer 触发 ClassCastException Bug）
 # 表结构由测试类通过 DatabaseClient 手动管理

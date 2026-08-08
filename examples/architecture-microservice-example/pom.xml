@@ -121,6 +121,12 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
+        <!-- Spring Data Redis（缓存模块 redis 实现需要 RedisTemplate 在 classpath） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
         <!-- MySQL 驱动（微服务架构常用外部数据库） -->
         <dependency>
             <groupId>com.mysql</groupId>

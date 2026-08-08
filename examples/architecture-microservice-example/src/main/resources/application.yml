@@ -4,12 +4,12 @@ spring:
   application:
     name: architecture-microservice-example
 
-  # MySQL 数据源（微服务架构使用外部数据库）
+  # MySQL 数据源（微服务架构使用外部数据库，请按实际环境调整连接信息）
   datasource:
-    url: jdbc:mysql://localhost:3306/aryee_microservice?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.0.176:3306/aryee_microservice?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: root
+    password: x!123456
 
   # JPA 配置
   jpa:
@@ -18,12 +18,12 @@ spring:
     show-sql: false
     database-platform: org.hibernate.dialect.MySQLDialect
 
-  # Redis 配置（分布式缓存）
+  # Redis 配置（分布式缓存，密码请按实际环境调整）
   data:
     redis:
       host: localhost
       port: 6379
-      password:
+      password: a123456
       timeout: 5s
       lettuce:
         pool:
@@ -71,6 +71,9 @@ aryee:
         log-retention-days: 7
 
 # Seata 配置
+# 默认使用 file 模式（零额外依赖，开箱即用）；生产环境可切换 nacos 注册/配置中心，
+# 需额外引入 seata-discovery-nacos / seata-config-nacos 插件依赖
+# 前置要求：AT 模式下业务库需存在 undo_log 表（建表 DDL 见 Seata 官方文档）
 seata:
   enabled: true
   application-id: ${spring.application.name}
@@ -81,22 +84,13 @@ seata:
     grouplist:
       default: localhost:8091
   config:
-    type: nacos
-    nacos:
-      server-addr: localhost:8848
-      namespace: public
-      group: SEATA_GROUP
+    type: file
   registry:
-    type: nacos
-    nacos:
-      server-addr: localhost:8848
-      namespace: public
-      group: DEFAULT_GROUP
-      application: seata-server
+    type: file
 
 # 服务器配置
 server:
-  port: 8080
+  port: 8084
 
 # 日志级别
 logging:

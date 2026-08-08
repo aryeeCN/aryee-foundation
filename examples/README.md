@@ -114,13 +114,13 @@ examples/
 - `cn.aryee.examples.cache.blocking.service.ProgrammaticCacheService` — **编程式缓存**：直接注入 `CacheService`，展示 get/set/delete、TTL 管理、批量 multiGet/multiSet、计数器 increment、Hash 数据结构、缓存穿透防护（空值缓存）
 - `cn.aryee.examples.cache.blocking.service.DeclarativeCacheService` — **声明式缓存**：使用 Spring `@Cacheable`/`@CachePut`/`@CacheEvict` 注解，底层通过 `AryeeCacheManager` 桥接到 `CacheService`，含条件缓存（condition/unless）
 - `cn.aryee.examples.cache.blocking.service.IdempotentService` — **幂等性实现**：基于 `CacheService.increment` 原子计数器实现接口幂等，支持 requestId 去重、结果缓存、TTL 窗口自动清理
-- `cn.aryee.examples.cache.blocking.controller.CacheExampleController` — REST API 端点（端口 8081）
+- `cn.aryee.examples.cache.blocking.controller.CacheExampleController` — REST API 端点
 
 `cache-examples-reactive` 内的 Java 示例类：
 
 - `cn.aryee.examples.cache.reactive.service.ReactiveProgrammaticCacheService` — **响应式编程式缓存**：注入 `ReactiveCacheService`，所有操作返回 `Mono`，展示 `switchIfEmpty` 缓存回源、`flatMap` 链式操作、非阻塞 TTL 管理
 - `cn.aryee.examples.cache.reactive.service.ReactiveIdempotentService` — **响应式幂等性**：基于 `ReactiveCacheService.increment` 的原子计数器，全程 `Mono` 链式传递，禁止 `block()`
-- `cn.aryee.examples.cache.reactive.controller.ReactiveCacheExampleController` — WebFlux REST API 端点（端口 8082）
+- `cn.aryee.examples.cache.reactive.controller.ReactiveCacheExampleController` — WebFlux REST API 端点
 
 > **快速体验**：两个示例默认使用 `aryee.cache.type=memory`（纯内存，无需 Redis），修改 `application.yml` 中 `type: redis` 可切换到 Redis 分布式缓存。
 
@@ -128,8 +128,8 @@ examples/
 
 | 示例模块 | ArtifactId | 引入的 Starter | 第三方依赖 |
 |---|---|---|---|
-| `transport-examples-blocking` | `transport-examples-blocking` | `transport-spring-boot-starter` | `spring-boot-starter-web`、`spring-cloud-starter-openfeign` |
-| `transport-examples-reactive` | `transport-examples-reactive` | `transport-reactive-spring-boot-starter` | `spring-boot-starter-webflux` |
+| `transport-examples-blocking` | `transport-examples-blocking` | `transport-spring-boot-starter` | `spring-boot-starter-web`、`spring-boot-starter-validation`、`spring-cloud-starter-openfeign` |
+| `transport-examples-reactive` | `transport-examples-reactive` | `transport-reactive-spring-boot-starter` | `spring-boot-starter-webflux`、`spring-boot-starter-validation` |
 
 ### 5. 消息队列示例
 
@@ -137,8 +137,8 @@ examples/
 |---|---|---|---|
 | `messaging-examples` | `messaging-examples` | `messaging-spring-boot-starter` | `spring-boot-starter-amqp`（RabbitMQ） |
 | `messaging-examples-reactive` | `messaging-examples-reactive` | `messaging-reactive-spring-boot-starter` | （Reactive RabbitMQ） |
-| `messaging-kafka-examples` | `messaging-kafka-examples` | `messaging-spring-boot-starter` | `spring-kafka` |
-| `messaging-kafka-examples-reactive` | `messaging-kafka-examples-reactive` | `messaging-reactive-spring-boot-starter` | `spring-kafka`（Reactive） |
+| `messaging-kafka-examples` | `messaging-kafka-examples` | `messaging-spring-boot-starter` | `spring-boot-starter-kafka` |
+| `messaging-kafka-examples-reactive` | `messaging-kafka-examples-reactive` | `messaging-reactive-spring-boot-starter` | `reactor-kafka`、`kafka-clients` |
 | `messaging-rocketmq-examples` | `messaging-rocketmq-examples` | `messaging-spring-boot-starter` | `rocketmq-spring-boot-starter` |
 | `messaging-rocketmq-examples-reactive` | `messaging-rocketmq-examples-reactive` | `messaging-reactive-spring-boot-starter` | `rocketmq-spring-boot-starter`（Reactive） |
 
@@ -187,7 +187,20 @@ examples/
 
 1. **JDK 21+**（示例 `maven-compiler-plugin` 配置 `<release>21</release>`）
 2. **Maven 3.9+**
-3. **相应的中间件服务**（MySQL、Redis、RabbitMQ、Kafka、RocketMQ、MinIO、Nacos 等，按所选示例按需准备）
+3. **相应的中间件服务**（按所选示例按需准备）：
+
+   | 中间件 | 涉及示例 | 默认连接配置 |
+   |---|---|---|
+   | MySQL | database-*、architecture-microservice | `localhost:3306`（示例默认账号密码请按实际环境调整） |
+   | Oracle | database-oracle-* | `localhost:1521/FREE`（system/oracle，请按实际环境调整） |
+   | Redis | cache-*、architecture-microservice | `localhost:6379`（密码请按实际环境调整） |
+   | RabbitMQ | messaging-examples* | `localhost:5672`（账号密码请按实际环境调整） |
+   | Kafka | messaging-kafka-* | `localhost:29092` |
+   | RocketMQ | messaging-rocketmq-* | NameServer `localhost:9876` |
+   | MinIO | storage-minio-* | 见各示例 `application.yml` |
+   | Nacos | architecture-cloudnative/microservice | `localhost:8848` |
+
+   > 微服务示例（Seata AT 模式）额外要求：业务库中预先创建 `undo_log` 表（建表 DDL 见 Seata 官方文档）。
 4. **Aryee Foundation 已本地安装**：先在仓库根目录执行 `mvn clean install -DskipTests` 将 `bom-full` 与各 Starter 安装到本地 Maven 仓库
 
 ### 构建与运行
@@ -227,6 +240,30 @@ Blocking 示例使用 `spring-boot-starter-test`；Reactive 示例额外引入 `
 ### 配置文件
 
 每个示例的 `src/main/resources/application.yml` 包含该示例所需的基础配置（端口、数据源、Redis、MQ 连接等），中间件地址默认指向 `localhost`，请按实际环境调整。
+
+### 端口分配表
+
+所有示例端口已全局去重，支持同时启动多个示例互不冲突（避开 8080/Nacos、8091/Seata TC 等常见占用端口）：
+
+| 端口 | 示例 |
+|---|---|
+| 8081 / 8082 | ai-examples-blocking / ai-examples-reactive |
+| 8083 | architecture-cloudnative-example |
+| 8084 | architecture-microservice-example |
+| 8085 | architecture-monolith-example |
+| 8086 / 8087 | cache-examples-blocking / cache-examples-reactive |
+| 8088 / 8089 | database-examples-blocking / database-examples-reactive |
+| 8090 / 8112 | database-oracle-examples-blocking / database-oracle-examples-reactive |
+| 8092 / 8093 | gateway-examples-blocking / gateway-examples-reactive |
+| 8094 / 8095 | messaging-examples-reactive / messaging-examples |
+| 8096 / 8097 | messaging-kafka-examples-reactive / messaging-kafka-examples |
+| 8098 / 8099 | messaging-rocketmq-examples-reactive / messaging-rocketmq-examples |
+| 8100 / 8101 | monitoring-trace-examples-blocking / monitoring-trace-examples-reactive |
+| 8102 / 8103 | scheduler-examples-blocking / scheduler-examples-reactive |
+| 8104 / 8105 | security-examples-blocking / security-examples-reactive |
+| 8106 / 8107 | storage-minio-examples-reactive / storage-minio-examples |
+| 8108 / 8109 | tenant-examples-blocking / tenant-examples-reactive |
+| 8110 / 8111 | transport-examples-blocking / transport-examples-reactive |
 
 ---
 

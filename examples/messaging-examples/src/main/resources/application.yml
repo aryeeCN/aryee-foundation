@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8095
 
 spring:
   application:
@@ -7,8 +7,9 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: guest
-    password: guest
+    # 请按实际环境调整账号密码
+    username: admin
+    password: a123456
     virtual-host: /
 
 aryee:

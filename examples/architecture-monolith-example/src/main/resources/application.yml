@@ -43,7 +43,7 @@ aryee:
 
 # 服务器配置
 server:
-  port: 8080
+  port: 8085
 
 # 日志级别
 logging:

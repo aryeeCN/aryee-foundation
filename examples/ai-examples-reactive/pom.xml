@@ -13,10 +13,8 @@
     <description>Aryee AI 模块 Reactive 模式使用示例</description>
 
     <properties>
-        <java.version>17</java.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>4.0.7</spring.boot.version>
         <aryee.version>1.0.0-SNAPSHOT</aryee.version>
     </properties>
 
@@ -33,10 +31,10 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Aryee AI Starter -->
+        <!-- Aryee AI Reactive Starter -->
         <dependency>
             <groupId>cn.aryee.foundation</groupId>
-            <artifactId>ai-spring-boot-starter</artifactId>
+            <artifactId>ai-reactive-spring-boot-starter</artifactId>
         </dependency>
 
         <!-- Spring Boot WebFlux -->
@@ -61,10 +59,29 @@
 
     <build>
         <plugins>
+            <!-- Maven Compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>21</release>
+                    <parameters>true</parameters>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.42</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.3.5</version>
+                <version>${spring.boot.version}</version>
             </plugin>
         </plugins>
     </build>

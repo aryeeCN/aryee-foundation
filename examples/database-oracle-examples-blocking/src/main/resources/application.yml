@@ -1,0 +1,8 @@
+# Aryee Database Blocking 示例应用配置 - Oracle
+# 数据访问配置位于 application-jdbc.yml（jdbc profile），
+# 此处将其设为默认 profile，保证 `mvn spring-boot:run` 零参数可启动
+spring:
+  application:
+    name: database-oracle-examples-blocking
+  profiles:
+    default: jdbc

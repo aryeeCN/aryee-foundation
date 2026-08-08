@@ -3,9 +3,9 @@ spring:
   application:
     name: messaging-kafka-examples-reactive
 
-# Kafka 连接配置
-kafka:
-  bootstrap-servers: localhost:29092
+  # Kafka 连接配置（Spring Boot 标准前缀 spring.kafka，框架据此自建 KafkaSender）
+  kafka:
+    bootstrap-servers: localhost:29092
 
 # Aryee Messaging 配置（Reactive 模式）
 aryee:
@@ -21,4 +21,4 @@ logging:
 
 # 服务器配置（WebFlux）
 server:
-  port: 8089
+  port: 8096

@@ -3,19 +3,20 @@ spring:
   application:
     name: messaging-kafka-examples
 
-# Kafka 连接配置
-kafka:
-  bootstrap-servers: localhost:29092
-  producer:
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    acks: all
-    retries: 3
-  consumer:
-    group-id: aryee-kafka-test-group
-    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    auto-offset-reset: earliest
+  # Kafka 连接配置（Spring Boot 标准前缀 spring.kafka）
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # 消息体为 Object，使用 JSON 序列化
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+    consumer:
+      group-id: aryee-kafka-test-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
 
 # Aryee Messaging 配置（Blocking 模式）
 aryee:
@@ -32,4 +33,4 @@ logging:
 
 # 服务器配置
 server:
-  port: 8088
+  port: 8097

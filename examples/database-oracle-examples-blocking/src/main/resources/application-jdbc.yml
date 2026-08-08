@@ -64,4 +64,4 @@ logging:
 
 # 服务器配置
 server:
-  port: 8085
+  port: 8090

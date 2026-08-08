@@ -26,4 +26,4 @@ logging:
 
 # 服务器配置（WebFlux）
 server:
-  port: 8083
+  port: 8094

@@ -27,7 +27,7 @@ logging:
 
 # 服务器配置（WebFlux）
 server:
-  port: 8085
+  port: 8112
 
 # 禁用 SQL 自动初始化（表结构由测试类通过 DatabaseClient 手动管理）
 spring.sql.init:
