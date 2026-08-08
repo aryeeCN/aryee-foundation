@@ -2,7 +2,7 @@
 
 > **所属项目**: [Aryee Foundation](../../README.md)
 > **架构层次**: 平台层 (Platform Layer)
-> **技术栈**: Java 21, Spring Boot 4.0.6, Kafka, RabbitMQ, RocketMQ, Redis, Reactor
+> **技术栈**: Java 21, Spring Boot 4.0.7, Kafka, RabbitMQ, RocketMQ, Redis, Reactor
 > **消息模式**: 阻塞式 (Blocking) + 响应式 (Reactive)
 
 ## 简介
@@ -422,7 +422,7 @@ public class ReliableMessageService {
 ## 兼容性
 
 - **Java**: 21+
-- **Spring Boot**: 4.0.6
+- **Spring Boot**: 4.0.7
 - **Reactor**: 与 Spring Boot 版本对齐
 - **消息中间件**: Kafka 3.x+、RabbitMQ 3.11+、RocketMQ 5.x+、Redis 5.0+
 - **Jakarta EE**: 9+（Servlet 6.0+）

@@ -1,7 +1,7 @@
 # Aryee Security 安全基础设施模块
 
 > **所属项目**: [Aryee Foundation](../../README.md)
-> **技术栈**: Java 21、Spring Boot 4.0.6、Sa-Token 1.45.0、JJWT 0.12.6、OAuth2
+> **技术栈**: Java 21、Spring Boot 4.0.7、Sa-Token 1.45.0、JJWT 0.12.6、OAuth2
 
 ## 简介
 
@@ -552,7 +552,7 @@ SecurityContextHolder.executeWith("user-123", "tenant-456", () -> {
 | 技术组件 | 版本要求 |
 |---------|---------|
 | Java | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Sa-Token | 1.45.0 |
 | JJWT | 0.12.6 |
 | Servlet 容器 | Tomcat 10.x / Jetty 11.x / Undertow 2.x |

@@ -1,7 +1,7 @@
 # Aryee Tenant 多租户基础设施模块
 
 > **所属项目**: [Aryee Foundation](../../README.md)
-> **技术栈**: Java 21、Spring Boot 4.0.6、JDBC（MyBatis-Plus）、R2DBC
+> **技术栈**: Java 21、Spring Boot 4.0.7、JDBC（MyBatis-Plus）、R2DBC
 
 ## 简介
 
@@ -441,7 +441,7 @@ String tenantKey = TenantCacheKeyUtils.buildTenantKey("user:123", tenantProperti
 | 技术组件 | 版本要求 |
 |---------|---------|
 | Java | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | MyBatis-Plus | 3.5.x（Blocking 模式行级隔离） |
 | R2DBC | Spring Data R2DBC 1.x（Reactive 模式 SQL 改写） |
 | MySQL | 8.0+ |

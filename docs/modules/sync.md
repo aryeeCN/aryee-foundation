@@ -2,7 +2,7 @@
 
 > **所属项目**: [Aryee Foundation](../../README.md)
 > **架构层次**: 基础设施层 (Foundation Layer)
-> **技术栈**: Java 21, Spring Boot 4.0.6, Spring Data Redis（可选）, Reactor（可选）
+> **技术栈**: Java 21, Spring Boot 4.0.7, Spring Data Redis（可选）, Reactor（可选）
 > **同步模式**: 阻塞式 (Blocking), 响应式 (Reactive)
 
 ## 简介
@@ -301,6 +301,6 @@ public void doWithLocalLock(String bizKey) throws InterruptedException {
 | 环境 | 版本要求 |
 |------|----------|
 | JDK | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Spring Data Redis | 3.x（可选，Redis 锁需要） |
 | Reactor | 3.x（可选，Reactive 模式需要） |

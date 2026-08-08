@@ -9,7 +9,7 @@
 | JDK | 21+ |
 | Maven | 3.8+ |
 | IDE | IntelliJ IDEA（推荐） |
-| Spring Boot | 4.0.x（框架基于 Spring Boot 4.0.6 构建） |
+| Spring Boot | 4.0.x（框架基于 Spring Boot 4.0.7 构建） |
 
 ## 2. 配置快照仓库
 

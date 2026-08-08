@@ -2,7 +2,7 @@
 
 > **所属项目**: [Aryee Foundation](../../README.md)
 > **架构层次**: 基础设施层 (Foundation Layer)
-> **技术栈**: Java 21, Spring Boot 4.0.6, Spring Cloud OpenFeign, Spring WebFlux WebClient, Spring Cloud LoadBalancer, Nacos Discovery, Resilience4j
+> **技术栈**: Java 21, Spring Boot 4.0.7, Spring Cloud OpenFeign, Spring WebFlux WebClient, Spring Cloud LoadBalancer, Nacos Discovery, Resilience4j
 > **传输模式**: 阻塞式 (Blocking), 响应式 (Reactive)
 
 ## 简介
@@ -507,7 +507,7 @@ aryee:
 | 环境 | 版本要求 |
 |------|----------|
 | JDK | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Spring Cloud | 2024.0.x |
 | Spring WebMVC | 6.x（阻塞式入站） |
 | Spring WebFlux | 6.x（响应式入站） |

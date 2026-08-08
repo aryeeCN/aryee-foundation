@@ -4,7 +4,7 @@
 
 ![Aryee Foundation](https://img.shields.io/badge/Aryee-Foundation-blue)
 ![Java](https://img.shields.io/badge/Java-21-orange)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.6-green)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.7-green)
 ![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.1.2-blue)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 
@@ -16,7 +16,7 @@
 
 ## 项目简介
 
-Aryee Foundation 是一个**企业级 Java 全架构开发框架**，旨在为**所有架构形态**（单体 / 微服务 / 云原生）提供开箱即用的完整解决方案。框架基于 Spring Boot 4.0.6 和 Spring Cloud 2025.1.2 构建，采用 DDD 领域驱动设计理念，支持 Blocking 和 Reactive 双编程模型。
+Aryee Foundation 是一个**企业级 Java 全架构开发框架**，旨在为**所有架构形态**（单体 / 微服务 / 云原生）提供开箱即用的完整解决方案。框架基于 Spring Boot 4.0.7 和 Spring Cloud 2025.1.2 构建，采用 DDD 领域驱动设计理念，支持 Blocking 和 Reactive 双编程模型。
 
 > 📦 **获取方式**：框架以二进制构件形式发布到 **Maven Central**（groupId `cn.aryee.foundation`），
 > 本仓库为官方**文档与示例仓库**。引入方式见 [快速开始](docs/getting-started.md)。
@@ -36,12 +36,12 @@ Aryee Foundation 是一个**企业级 Java 全架构开发框架**，旨在为**
 | 分类 | 组件 | 版本 |
 |---|---|---|
 | **JDK** | Java | 21 |
-| **Spring 生态** | Spring Boot | 4.0.6 |
+| **Spring 生态** | Spring Boot | 4.0.7 |
 | | Spring Cloud | 2025.1.2 |
 | | Spring Cloud Alibaba | 2025.1.0.0 |
-| | Spring Security | 7.0.5 |
+| | Spring Security | 7.0.6 |
 | | Spring AI | 2.0.0 |
-| | Spring Session | 4.0.3 |
+| | Spring Session | 4.0.4 |
 | **缓存** | Caffeine | — |
 | | Redisson | 3.38.1 |
 | **数据库** | MyBatis-Plus | 3.5.17 |
@@ -54,7 +54,7 @@ Aryee Foundation 是一个**企业级 Java 全架构开发框架**，旨在为**
 | **消息队列** | RocketMQ | 5.3.1 |
 | | Spring Kafka | 3.3.16 |
 | **调度** | Quartz | 2.3.2 |
-| | XXL-Job | 2.5.1 |
+| | XXL-Job | 3.4.2 |
 | **存储** | MinIO | 8.5.15 |
 | | Aliyun OSS SDK | 3.18.5 |
 | | Qcloud COS | 5.6.220 |
@@ -324,7 +324,7 @@ public R<List<UserVO>> pageUsers(UserQuery query) {
 
 - ✅ 完整四层架构（API/Infrastructure/Autoconfigure/Starter）+ Blocking/Reactive 双模式
 - ✅ 20+ 功能模块 + commons + bom + cli，已发布至 Maven Central 快照仓
-- ✅ Spring Boot 4.0.6 / Spring Framework 7 / Jakarta EE 11 / Jackson 3 / Spring Cloud 2025.1.2
+- ✅ Spring Boot 4.0.7 / Spring Framework 7 / Jakarta EE 11 / Jackson 3 / Spring Cloud 2025.1.2
 - ✅ 集成 Spring AI 2.0.0（LLM/Embedding/VectorStore/RAG/Agent/Session/Prompt）
 - ✅ 三大架构形态完整示例（monolith/cloudnative/microservice）
 - ✅ BOM 体系完善：21 个功能模块 BOM + bom-internal + bom-full，统一版本管理

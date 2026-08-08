@@ -2,7 +2,7 @@
 
 > **所属项目**: [Aryee Foundation](../../README.md)
 > **类型**: 字典管理基础设施模块
-> **技术栈**: Java 21, Spring Boot 4.0.6, Jackson, MyBatis-Plus（可选）, Caffeine（可选）, Redis（可选）
+> **技术栈**: Java 21, Spring Boot 4.0.7, Jackson, MyBatis-Plus（可选）, Caffeine（可选）, Redis（可选）
 > **主包**: `cn.aryee.dict.api`
 
 字典管理基础设施模块，提供统一的字典 CRUD、缓存与注解驱动的序列化翻译能力，支持 Blocking 与 Reactive 双模式。
@@ -395,7 +395,7 @@ JSON 输出（原字段 + label 字段）
 | 环境 | 版本要求 |
 |------|----------|
 | JDK | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Jackson | 由 bom-base 统一管理 |
 | cache 模块（可选） | 1.0.0-SNAPSHOT |
 | database 模块（可选） | 1.0.0-SNAPSHOT |

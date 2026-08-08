@@ -2,7 +2,7 @@
 
 > **所属项目**: [Aryee Foundation](../README.md)
 > **类型**: 独立示例工程集合（非聚合 POM，每个示例是独立 Maven 项目）
-> **技术栈**: Java 21, Spring Boot 4.0.6, Quartz, XXL-Job, OpenFeign, WebClient, Nacos
+> **技术栈**: Java 21, Spring Boot 4.0.7, Quartz, XXL-Job, OpenFeign, WebClient, Nacos
 > **BOM**: 各示例通过 `dependencyManagement` 引入 `cn.aryee.foundation:bom-full` 统一版本管理
 
 本目录包含 Aryee Foundation 各功能模块的使用示例与集成验证工程，覆盖 Blocking / Reactive 双模式，帮助开发者快速上手。同时提供三个**架构形态完整示例**，展示单体/云原生/微服务架构的完整应用搭建。

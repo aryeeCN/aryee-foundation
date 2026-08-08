@@ -2,7 +2,7 @@
 
 > **所属项目**: [Aryee Foundation](../../README.md)
 > **架构层次**: 基础设施层 (Foundation Layer)
-> **技术栈**: Java 21, Spring Boot 4.0.6, Spring Cloud 2025.1.2, Spring Data Redis, Caffeine
+> **技术栈**: Java 21, Spring Boot 4.0.7, Spring Cloud 2025.1.2, Spring Data Redis, Caffeine
 > **缓存模式**: 阻塞式 (Blocking) / 响应式 (Reactive)
 
 ## 简介
@@ -397,7 +397,7 @@ public class UserService {
 | 环境 | 版本要求 |
 |------|----------|
 | JDK | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Spring Cloud | 2025.1.2 |
 | Spring Data Redis | 3.5.x |
 | Caffeine | 3.x |

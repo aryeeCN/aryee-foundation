@@ -1,7 +1,7 @@
 # Aryee Scheduler 任务调度基础设施模块
 
 > **所属项目**: [Aryee Foundation](../../README.md)
-> **技术栈**: Java 21、Spring Boot 4.0.6、Quartz、XXL-Job、Reactor
+> **技术栈**: Java 21、Spring Boot 4.0.7、Quartz、XXL-Job、Reactor
 
 ## 简介
 
@@ -520,7 +520,7 @@ try {
 | 项 | 版本 |
 |----|------|
 | Java | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Quartz | 跟随 Spring Boot 版本 |
 | XXL-Job | xxl-job-core |
 

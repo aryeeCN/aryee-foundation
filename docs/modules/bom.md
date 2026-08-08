@@ -2,7 +2,7 @@
 
 > **所属项目**: [Aryee Foundation](../../README.md)
 > **架构层次**: 版本管理（依赖版本唯一来源）
-> **技术栈**: Maven 3.8+ / Java 21 / Spring Boot 4.0.6
+> **技术栈**: Maven 3.8+ / Java 21 / Spring Boot 4.0.7
 > **Group ID**: cn.aryee.foundation
 
 ## 简介
@@ -15,9 +15,9 @@ Aryee BOM (Bill of Materials) 是整个 Aryee Foundation 项目的依赖版本�
 
 - ✅ **版本唯一来源**: 第三方依赖版本集中在 `bom-base`，内部模块版本集中在 `bom-internal`
 - ✅ **分层聚合**: 按业务领域划分子 BOM，按需引入，避免冗余依赖
-- ✅ **Spring Boot 4.0.6 集成**: 完全兼容 Spring Cloud 2025.1.2 / Spring Cloud Alibaba 2025.1.0.0 生态
+- ✅ **Spring Boot 4.0.7 集成**: 完全兼容 Spring Cloud 2025.1.2 / Spring Cloud Alibaba 2025.1.0.0 生态
 - ✅ **双模式支持**: 同时管理 Blocking 和 Reactive 模块的 Starter 版本
-- ✅ **安全修复覆盖**: Jackson 2.22.1（CVE-2026-54512~54515）、Spring Boot 4.0.6（CVE-2026-40973）、Spring Kafka 3.3.16（CVE-2026-41726/41731）
+- ✅ **安全修复覆盖**: Jackson 2.22.1（CVE-2026-54512~54515）、Spring Boot 4.0.7（CVE-2026-40973）、Spring Kafka 3.3.16（CVE-2026-41726/41731）
 - ✅ **CI 友好**: 配合 `flatten-maven-plugin` 支持 `${aryee.version}` 占位符
 
 ## 模块结构
@@ -54,7 +54,7 @@ aryee-foundation-bom/                 # BOM 聚合 POM
 
 | 模块 | 说明 | 主要内容 |
 |------|------|----------|
-| **bom-base** | 第三方依赖管理（版本唯一来源） | Spring Boot 4.0.6 / Spring Cloud 2025.1.2 / Spring Cloud Alibaba 2025.1.0.0 / Spring Security 7.0.5 / Spring AI 2.0.0 / Sa-Token 1.45.0 / JJWT 0.12.6 / Seata 2.5.0 / MyBatis-Plus 3.5.17 / MySQL 9.2.0 / Nacos 3.1.1 / Jackson 2.22.1 等 |
+| **bom-base** | 第三方依赖管理（版本唯一来源） | Spring Boot 4.0.7 / Spring Cloud 2025.1.2 / Spring Cloud Alibaba 2025.1.0.0 / Spring Security 7.0.6 / Spring AI 2.0.0 / Sa-Token 1.45.0 / JJWT 0.12.6 / Seata 2.5.0 / MyBatis-Plus 3.5.17 / MySQL 9.2.0 / Nacos 3.1.1 / Jackson 2.22.1 等 |
 | **bom-cache** | 缓存模块管理 | cache-api / cache-infrastructure / cache-spring-boot-autoconfigure / cache-spring-boot-starter + Reactive 版本 |
 | **bom-database** | 数据库模块管理 | database-api / database-infrastructure / database-spring-boot-autoconfigure / database-spring-boot-starter + Reactive 版本 |
 | **bom-security** | 安全模块管理 | security-api / security-infrastructure / security-spring-boot-autoconfigure / security-spring-boot-starter + Reactive 版本 |
@@ -220,10 +220,10 @@ aryee-foundation-bom/                 # BOM 聚合 POM
 
 | 分类 | 依赖 | 版本 |
 |---|---|---|
-| **Spring 生态** | spring-boot | 4.0.6 |
+| **Spring 生态** | spring-boot | 4.0.7 |
 | | spring-cloud | 2025.1.2 |
 | | spring-cloud-alibaba | 2025.1.0.0 |
-| | spring-security-bom | 7.0.5 |
+| | spring-security-bom | 7.0.6 |
 | | spring-ai-bom | 2.0.0 |
 | | spring-session | 3.5.6 |
 | **JSON** | jackson | 2.22.1（覆盖 Spring Boot 默认，修复 CVE-2026-54512~54515） |
@@ -244,7 +244,7 @@ aryee-foundation-bom/                 # BOM 聚合 POM
 | **消息队列** | rocketmq | 5.3.1 |
 | | spring-kafka | 3.3.16（覆盖 Spring Boot 默认，修复 CVE-2026-41726/41731） |
 | **调度** | quartz | 2.3.2 |
-| | xxl-job | 2.5.1 |
+| | xxl-job | 3.4.2 |
 | **存储 SDK** | minio | 8.5.15 |
 | | aliyun-sdk-oss | 3.18.5 |
 | | qcloud-cos | 5.6.220 |
@@ -264,7 +264,7 @@ aryee-foundation-bom/                 # BOM 聚合 POM
 | | opentelemetry | 1.48.0 |
 | | zipkin-reporter-brave | 3.4.2 |
 | | skywalking | 9.2.0 |
-| **测试** | junit-jupiter | 5.11.3 |
+| **测试** | junit-jupiter | 6.0.3 |
 | | mockito | 5.15.2 |
 | | assertj | 3.26.3 |
 | | testcontainers | 1.20.4 |
@@ -351,7 +351,7 @@ aryee-foundation-bom/                 # BOM 聚合 POM
 ```xml
 <!-- bom-base/pom.xml -->
 <properties>
-    <spring.boot.version>4.0.6</spring.boot.version>  <!-- 升级只改这里 -->
+    <spring.boot.version>4.0.7</spring.boot.version>  <!-- 升级只改这里 -->
 </properties>
 ```
 
@@ -428,7 +428,7 @@ aryee-foundation-bom/                 # BOM 聚合 POM
 
 | Spring Boot 版本 | 兼容性 | 说明 |
 |-----------------|--------|------|
-| 4.0.x | ✅ 完全支持 | 当前版本 4.0.6（Spring Framework 7 / Jakarta EE 11 / Jackson 3） |
+| 4.0.x | ✅ 完全支持 | 当前版本 4.0.7（Spring Framework 7 / Jakarta EE 11 / Jackson 3） |
 | 3.5.x 及以下 | ❌ 不支持 | 框架已升级到 Boot 4，历史版本请使用旧版框架 |
 | 2.x | ❌ 不支持 | 需要 Jakarta EE 迁移 |
 

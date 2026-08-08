@@ -2,7 +2,7 @@
 
 > **所属项目**: [Aryee Foundation](../../README.md)
 > **类型**: 命令行工具（Fat JAR）
-> **技术栈**: Java 21, Spring Boot 4.0.6, Picocli, FreeMarker, Jasypt, SnakeYAML
+> **技术栈**: Java 21, Spring Boot 4.0.7, Picocli, FreeMarker, Jasypt, SnakeYAML
 > **主类**: `cn.aryee.cli.FoundationCli`
 
 Aryee Foundation 脚手架与代码生成工具，提供项目初始化、代码生成（后端 + SQL + 前端 Vue 全套）、模块骨架创建、项目校验、依赖分析和配置加密等命令行能力。
@@ -449,7 +449,7 @@ mvn compile exec:java -Dexec.mainClass="cn.aryee.cli.FoundationCli" -Dexec.args=
 |------|----------|
 | JDK | 21+ |
 | Maven | 3.9+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Picocli | 由 bom-base 统一管理 |
 | FreeMarker | 由 bom-base 统一管理 |
 | Jasypt | 由 bom-base 统一管理 |

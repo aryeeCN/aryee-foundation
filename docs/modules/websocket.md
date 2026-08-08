@@ -2,7 +2,7 @@
 
 > **所属项目**: [Aryee Foundation](../../README.md)
 > **架构层次**: 基础设施层 (Foundation Layer)
-> **技术栈**: Java 21, Spring Boot 4.0.6, Spring WebSocket, STOMP, Reactor Netty
+> **技术栈**: Java 21, Spring Boot 4.0.7, Spring WebSocket, STOMP, Reactor Netty
 > **访问模式**: 阻塞式 (Servlet / Tomcat) / 响应式 (WebFlux / Reactor Netty)
 
 ## 简介
@@ -369,7 +369,7 @@ WebSocket 模块支持握手鉴权，与 [security 模块](security.md) 联动�
 | 环境 | 版本要求 |
 |------|----------|
 | JDK | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Spring WebSocket | 6.x |
 | Reactor Netty | 1.2+ |
 

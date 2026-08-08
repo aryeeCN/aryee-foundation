@@ -329,7 +329,7 @@ cn.aryee.commons.web
 | 依赖 | 最低版本 | 说明 |
 |---|---|---|
 | **JDK** | 21 | 使用 `java.time`、`@Serial`、模式匹配等新 API |
-| **Spring Boot** | 4.0.6 | Jakarta EE 11 + Spring Framework 7.0.x |
+| **Spring Boot** | 4.0.7 | Jakarta EE 11 + Spring Framework 7.0.x |
 | **Lombok** | 1.18.42 | commons-domain 依赖（@Data / @Accessors 等） |
 | **Jackson** | 2.22.1 | commons-spring 的 JSON 工具依赖（BOM 已管理） |
 | **Hibernate Validator** | 8.x | `ValidationUtil` 可选依赖（不引入则相关方法抛友好提示） |

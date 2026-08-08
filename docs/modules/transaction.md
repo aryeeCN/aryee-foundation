@@ -2,7 +2,7 @@
 
 > **所属项目**: [Aryee Foundation](../../README.md)
 > **架构层次**: 基础设施层 (Foundation Layer)
-> **技术栈**: Java 21, Spring Boot 4.0.6, Apache Seata 2.5.0 (`org.apache.seata`), AspectJ, OpenFeign
+> **技术栈**: Java 21, Spring Boot 4.0.7, Apache Seata 2.5.0 (`org.apache.seata`), AspectJ, OpenFeign
 
 ## 简介
 

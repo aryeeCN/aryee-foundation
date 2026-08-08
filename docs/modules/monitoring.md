@@ -1,7 +1,7 @@
 # Aryee Monitoring 监控基础设施模块
 
 > **所属项目**: [Aryee Foundation](../../README.md)
-> **技术栈**: Java 21、Spring Boot 4.0.6、Micrometer、OpenTelemetry、Apache SkyWalking、Zipkin Brave、Logback
+> **技术栈**: Java 21、Spring Boot 4.0.7、Micrometer、OpenTelemetry、Apache SkyWalking、Zipkin Brave、Logback
 
 ## 简介
 
@@ -449,7 +449,7 @@ public class LoggingExampleService {
 | 项 | 版本 |
 |----|------|
 | Java | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Micrometer | 跟随 Spring Boot 版本 |
 | OpenTelemetry | 1.x |
 | Apache SkyWalking | apm-toolkit-trace |

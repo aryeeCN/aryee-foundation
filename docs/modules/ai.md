@@ -1,7 +1,7 @@
 # Aryee AI 大模型基础设施模块
 
 > **所属项目**: [Aryee Foundation](../../README.md)
-> **技术栈**: Java 21、Spring Boot 4.0.6、Spring AI 2.0.0、Reactor、Caffeine、Redisson、Milvus SDK、阿里云 DashScope SDK
+> **技术栈**: Java 21、Spring Boot 4.0.7、Spring AI 2.0.0、Reactor、Caffeine、Redisson、Milvus SDK、阿里云 DashScope SDK
 
 ## 简介
 
@@ -496,7 +496,7 @@ try {
 | 项 | 版本 |
 |----|------|
 | Java | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Spring AI | 2.0.0 |
 
 ### 支持的 LLM 提供商

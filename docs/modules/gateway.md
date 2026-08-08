@@ -1,7 +1,7 @@
 # Aryee Gateway API 网关增强模块
 
 > **所属项目**: [Aryee Foundation](../../README.md)
-> **技术栈**: Java 21、Spring Boot 4.0.6、Spring Cloud Gateway、Nacos、Security API（认证/签名委托）
+> **技术栈**: Java 21、Spring Boot 4.0.7、Spring Cloud Gateway、Nacos、Security API（认证/签名委托）
 
 ## 简介
 
@@ -396,7 +396,7 @@ aryee:
 | 技术组件 | 版本要求 |
 |---------|---------|
 | Java | 21+ |
-| Spring Boot | 4.0.6 |
+| Spring Boot | 4.0.7 |
 | Spring Cloud Gateway | 2025.1.2 |
 | Resilience4j | 2.x |
 | security-api | 项目内部模块（提供 ReactiveAuthService / ReactiveSignatureService） |
