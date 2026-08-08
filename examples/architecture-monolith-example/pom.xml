@@ -47,10 +47,23 @@
             <artifactId>cache-spring-boot-starter</artifactId>
         </dependency>
 
+        <!-- Caffeine 本地缓存（框架侧为 optional 不传递，示例配置 aryee.cache.type=caffeine 需显式声明） -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
         <!-- 数据库模块 -->
         <dependency>
             <groupId>cn.aryee.foundation</groupId>
             <artifactId>database-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- H2 嵌入式数据库（框架侧为 optional 不传递，示例显式声明实现零外部依赖启动） -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- 存储模块 -->
