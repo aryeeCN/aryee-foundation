@@ -21,6 +21,9 @@
 - ✅ **声明式数据权限**: `@DataPermission` / `@DataPermissionIgnore` 注解 + AOP 切面，自动构建 SQL 过滤条件
 - ✅ **动态数据源**: `@DataSource` 注解 + AOP 切面支持方法级数据源切换
 - ✅ **Spring Boot 自动配置**: 通过 `AutoConfiguration.imports` 自动装配
+- ✅ **H2 自动检测**: 未配置外部数据源时自动启用嵌入式 H2，单体应用零配置启动
+- ✅ **智能启动诊断**: 启动时展示多租户/审计/加密/版本控制状态及生产环境建议
+- ✅ **配置项智能校验**: 启动时校验多租户模式值范围（schema/database/column）
 
 ## 模块结构
 

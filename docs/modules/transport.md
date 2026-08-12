@@ -70,7 +70,7 @@ aryee-foundation-transport/                       ← 聚合 POM（packaging=pom
 ```
 
 - **依赖方向**: Starter → Autoconfigure → Infrastructure → API
-- **依赖 commons**: `commons-core` / `commons-domain` / `commons-spring` / `commons-web`
+- **依赖 commons**: `commons-core` / `commons-domain` / `commons-spring` / `commons-servlet`
 - **双模式隔离**（参见 architecture.md §6.1）：Blocking 与 Reactive 使用独立的 Starter / Autoconfigure 模块，用户二选一引入，禁止同时引入
 
 ## Maven 依赖

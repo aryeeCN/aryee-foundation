@@ -12,10 +12,11 @@ API 治理与文档平台，基于 SpringDoc OpenAPI 3 + Knife4j 提供开箱即
 - **接口可见性治理**：通过 `@DocHidden` / `@DocVisible` 注解控制接口在文档中的显隐
 - **数据脱敏**：通过 `@DocSensitive` 注解在文档中自动脱敏敏感字段
 - **离线文档导出**：支持导出 HTML / Markdown / JSON 格式的离线文档
-- **网关文档聚合**：Spring Cloud Gateway 环境自动发现下游服务，聚合展示 API 文档
+- **网关文档聚合**：Spring Cloud Gateway 环境自动发现下游服务，聚合展示 API 文档（通过 DiscoveryClient 过滤不可用服务）
 - **Knife4j 增强 UI**：默认启用 Knife4j，提供更友好的中文 UI（`/doc.html`）
 - **双模式支持**：Blocking（WebMVC）与 Reactive（WebFlux）独立 Starter，二选一引入
 - **启动日志**：应用启动时打印 Swagger UI / API Docs / Knife4j UI 访问地址
+- **微服务增强版**：提供 `doc-microservice-spring-boot-starter` 和 `doc-reactive-microservice-spring-boot-starter`，内置 Spring Cloud Commons + Gateway Server，适用于微服务网关文档聚合
 
 ## 模块结构
 
@@ -265,7 +266,16 @@ aryee:
           url: http://external-api.com/v3/api-docs
 ```
 
-启用后，Knife4j UI 会自动添加 `/swagger-resources` 端点，在下拉框中展示所有下游服务的文档。
+启用后，Foundation 自动提供以下端点：
+
+| 端点 | 说明 |
+|------|------|
+| `/swagger-resources` | 兼容旧版 Knife4j 的文档资源列表 |
+| `/v3/api-docs/swagger-config` | Knife4j 4.x 文档聚合配置（springdoc 协议） |
+
+所有端点均通过 `DiscoveryClient` 过滤，仅返回有活跃注册实例的下游服务，避免 UI 尝试加载不可用服务的文档时报错。
+
+> **重要约束**：自动发现的文档 URL 格式为 `/{routeId}/v3/api-docs`，route ID 必须与路由的 Path 谓词前缀一致，否则 Knife4j UI 请求文档时会 404。如果无法对齐，可使用 `gateway.services` 手动配置文档 URL。
 
 ## 自定义扩展
 
