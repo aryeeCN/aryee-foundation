@@ -90,7 +90,7 @@ aryee:
 </dependencyManagement>
 
 <dependencies>
-    <dependency><groupId>cn.aryee.foundation</groupId><artifactId>commons-web</artifactId></dependency>
+    <dependency><groupId>cn.aryee.foundation</groupId><artifactId>commons-servlet</artifactId></dependency>
     <dependency><groupId>cn.aryee.foundation</groupId><artifactId>cache-spring-boot-starter</artifactId></dependency>
     <dependency><groupId>cn.aryee.foundation</groupId><artifactId>database-spring-boot-starter</artifactId></dependency>
     <dependency><groupId>cn.aryee.foundation</groupId><artifactId>storage-spring-boot-starter</artifactId></dependency>

@@ -102,7 +102,7 @@ cn.aryee.gateway.infrastructure/
 </dependency>
 ```
 
-Reactive Starter 已 `optional` 引入 `spring-cloud-starter-gateway-server-webflux`、`sa-token-reactor-spring-boot4-starter`（Same-Token 转发用）、`spring-boot-starter-data-redis-reactive`，按需在业务工程中显式声明。`gateway-infrastructure` 已依赖 `security-api` 契约层，鉴权与签名验证委托 security 模块的 `ReactiveAuthService` / `ReactiveSignatureService` 实现。
+Reactive Starter 已 `optional` 引入 `spring-cloud-starter-gateway-server-webflux`、`spring-boot-starter-data-redis-reactive`，按需在业务工程中显式声明。`gateway-infrastructure` 已依赖 `security-api` 契约层，鉴权、签名验证与 Same-Token 转发分别委托 security 模块的 `ReactiveAuthService` / `ReactiveSignatureService` / `ReactiveSameTokenService` 实现。
 
 ## 配置项
 
@@ -337,7 +337,7 @@ public class DashboardService {
 |--------|---------|------|
 | `AuthGatewayFilter` | `ReactiveAuthService` Bean 存在且 `sa-token.enabled=true` | 关闭 |
 | **AuthGatewayFilter 安全上下文传播** | 鉴权成功后自动注入 `X-User-Id`/`X-Tenant-Id` 请求头 | 启用 |
-| `SameTokenForwardFilter` | `aryee.gateway.filter.same-token.enabled=true` 且 `SaSameUtil` 类存在 | 关闭 |
+| `SameTokenForwardFilter` | `ReactiveSameTokenService` Bean 存在且 `same-token.enabled=true` | 关闭 |
 | `SqlInjectionFilter` | Spring Cloud Gateway 存在且 `sql-injection.enabled != false` | 开启 |
 | `ApiSignatureFilter`（Redis） | `ReactiveSignatureService` Bean + Reactive Redis 存在且 `api-signature.enabled=true` | 关闭 |
 | `ApiSignatureFilter`（内存） | 上一条未装配且 `api-signature.enabled=true` | 关闭 |
@@ -399,7 +399,6 @@ aryee:
 | Spring Boot | 4.0.7 |
 | Spring Cloud Gateway | 2025.1.2 |
 | Resilience4j | 2.x |
-| security-api | 项目内部模块（提供 ReactiveAuthService / ReactiveSignatureService） |
-| Sa-Token | 1.45.0（仅 Same-Token 转发过滤器需要） |
+| security-api | 项目内部模块（提供 ReactiveAuthService / ReactiveSignatureService / ReactiveSameTokenService） |
 | Nacos | 2.x（动态路由配置中心） |
 | Reactive Redis | Spring Data Redis Reactive（API 签名防重放） |

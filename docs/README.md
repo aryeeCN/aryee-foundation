@@ -31,7 +31,7 @@ Aryee Foundation 官方文档索引。框架以二进制构件发布到 Maven Ce
 |------|------|
 | [cache](modules/cache.md) | 缓存（Redis + Caffeine + 多级缓存 + 分布式锁） |
 | [database](modules/database.md) | 数据库（MyBatis-Plus + JPA + R2DBC + H2 嵌入式默认） |
-| [security](modules/security.md) | 安全（Sa-Token + JWT + OAuth2 + 幂等 + MFA） |
+| [security](modules/security.md) | 安全（本地 JWT 核心 + Sa-Token/Keycloak/OAuth 可插拔适配器 + 幂等 + MFA） |
 | [storage](modules/storage.md) | 存储（Local/OSS/COS/Qiniu/MinIO） |
 | [messaging](modules/messaging.md) | 消息（Kafka/RabbitMQ/RocketMQ，收发完整） |
 | [transport](modules/transport.md) | 传输（入站 Web + 出站 OpenFeign/WebClient，多注册中心 SPI） |

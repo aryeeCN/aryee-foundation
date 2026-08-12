@@ -1,8 +1,8 @@
 # Aryee Foundation Commons 公共基础模块
 
-> **所属项目**: [Aryee Foundation](../../README.md)
+> **所属项目**: [Aryee Foundation](../README.md)
 > **架构层次**: 公共基础（所有功能模块的依赖基础）
-> **技术栈**: Java 21 + Lombok 1.18.42 + Spring Framework 7.0.x（仅 commons-spring/commons-web）
+> **技术栈**: Java 21 + Lombok 1.18.42 + Spring Framework 7.0.x（仅 commons-spring/commons-servlet）
 
 ## 简介
 
@@ -12,7 +12,7 @@ Aryee Foundation Commons 是整个项目的公共基石，提供跨模块复用�
 
 ### 核心特性
 
-- ✅ **分层依赖**: 4 个子模块按依赖强度递增，按需引入避免依赖污染
+- ✅ **分层依赖**: 5 个子模块按依赖强度递增，按需引入避免依赖污染
 - ✅ **零 Spring 依赖**: commons-core 纯 JDK 实现，可在任何环境使用
 - ✅ **统一异常体系**: `GlobalException` 唯一基础异常根类，禁止 `BaseException`
 - ✅ **统一响应协议**: `R<T>` 标准响应格式 + `PageResult<T>` 分页结果
@@ -30,8 +30,10 @@ aryee-foundation-commons/             # Commons 聚合 POM
 │   └── src/main/java/cn/aryee/commons/domain/
 ├── commons-spring/                   # Spring 扩展工具（依赖 Spring + commons-core/domain）
 │   └── src/main/java/cn/aryee/commons/spring/
-└── commons-web/                      # Web 层工具（依赖 Spring-Web + commons-spring）
-    └── src/main/java/cn/aryee/commons/web/
+├── commons-servlet/                  # Servlet/MVC 专属（依赖 Spring-WebMvc + Servlet API）
+│   └── src/main/java/cn/aryee/commons/servlet/
+└── commons-excel/                    # Excel 导入导出工具（基于 EasyExcel，与 Web 无关）
+    └── src/main/java/cn/aryee/commons/excel/
 ```
 
 ### 各模块依赖定位
@@ -40,10 +42,11 @@ aryee-foundation-commons/             # Commons 聚合 POM
 |---|---|---|---|
 | **commons-core** | `commons-core` | ❌ 纯 JDK 21 | 任何地方都能用：枚举服务、异常、响应 R、工具类、ID 生成、I18N、上下文 |
 | **commons-domain** | `commons-domain` | ❌ 纯 JDK + Lombok | DDD 分层：实体基类、分页、查询模型、规格模式、值对象、领域事件 |
-| **commons-spring** | `commons-spring` | ✅ Spring Framework 7.0.x | Spring 容器内：Bean 拷贝、JSON、SpEL、AOP、Spring 雪花 ID、动态任务 |
-| **commons-web** | `commons-web` | ✅ Spring-Web | WebMVC/WebFlux：全局异常、响应包装、过滤器、Web 日志切面、SQL 注入防御 |
+| **commons-spring** | `commons-spring` | ✅ Spring Framework 7.0.x | Spring 容器内：Bean 拷贝、JSON、SpEL、AOP、Spring 雪花 ID、脱敏注解/序列化器、文件上传 |
+| **commons-servlet** | `commons-servlet` | ✅ Spring-WebMvc + Servlet API | Servlet/MVC 项目：全局异常、响应包装、过滤器、Web 日志切面、CORS |
+| **commons-excel** | `commons-excel` | ✅ EasyExcel | Excel 导入导出：注解、转换器、读写器、样式处理（响应式项目也可安全引入） |
 
-> **依赖方向**：`commons-web → commons-spring → commons-domain → commons-core`，禁止反向依赖。
+> **依赖方向**：`commons-servlet → commons-spring → commons-domain → commons-core`，`commons-excel → commons-spring`，禁止反向依赖。
 
 ## 使用方法
 
@@ -78,7 +81,11 @@ aryee-foundation-commons/             # Commons 聚合 POM
     </dependency>
     <dependency>
         <groupId>cn.aryee.foundation</groupId>
-        <artifactId>commons-web</artifactId>
+        <artifactId>commons-servlet</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>cn.aryee.foundation</groupId>
+        <artifactId>commons-excel</artifactId>
     </dependency>
 </dependencies>
 ```
@@ -183,6 +190,7 @@ cn.aryee.commons
     ├── io/              IoUtil / ResourceUtil / StreamUtil
     ├── lang/            ClassUtil / ReflectUtil
     ├── network/         HttpUtil
+    ├── qrcode/          QRCodeUtil（ZXing 二维码生成/解析，支持 Logo / Base64 / data URI / 文件）
     ├── number/          BitUtil / ByteFormatUtil / MoneyUtil / NumberUtil / RandomUtil
     ├── string/          StringUtil / NamingUtil / RegexUtil / EscapeUtil / UrlUtil
     │                    StringConvertUtil / StringFormatUtil / StringRandomUtil
@@ -203,6 +211,7 @@ cn.aryee.commons
 | 上下文 | `ServiceContext` / `TraceContext` | ThreadLocal 实现，需 Filter 清理 |
 | 脱敏 | `DesensitizeUtil.mobilePhone()` 等 | 手机号/身份证/银行卡/姓名/邮箱/地址/车牌/IP |
 | 树结构 | `TreeUtil.buildTree()` / `findPath()` | 部门/分类/地区树 |
+| 二维码 | `QRCodeUtil.encodeToImage()` / `encodeToFile()` / `decode()` | ZXing 生成/解析，支持 Logo、Base64、data URI |
 
 ## 2️⃣ commons-domain 通用领域模型
 
@@ -295,33 +304,46 @@ cn.aryee.commons.spring
     └── ReactiveHttpUtil                           响应式 HTTP 工具（基于 WebClient，可选）
 ```
 
-## 4️⃣ commons-web Web 层工具
+## 4️⃣ commons-servlet Servlet/MVC 专属工具
 
 ### 包结构
 
 ```
-cn.aryee.commons.web
+cn.aryee.commons.servlet
 ├── advice/              Controller 增强
 │   ├── GlobalExceptionHandler         全局异常处理（@ControllerAdvice，转 R 响应）
 │   └── ResponseBodyWrapAdvice         响应体包装（自动包装非 R 返回值）
-├── annotation/          Web 注解
-│   └── Phone                          手机号校验注解
 ├── aspect/              切面
 │   └── WebLogAspect                   Web 访问日志切面
-├── constant/            Web 常量
-│   └── HeaderConstants                请求头常量
 ├── filter/              过滤器
 │   ├── RepeatableReadFilter           请求体可重复读过滤器
 │   ├── ReplayCheckFilter              重放校验过滤器
 │   ├── RequestIdFilter                请求 ID 注入过滤器
 │   ├── SecureResponseHeaderFilter     安全响应头过滤器
 │   └── XssFilter                      XSS 过滤器
-├── support/             Web 辅助
-│   └── ApiResponseUtil                响应工具
-└── util/                Web 工具
-    ├── FileUploadUtil                 文件上传工具
-    ├── RateLimitUtil                  限流工具
-    └── SqlInjectionUtil               SQL 注入检测工具
+├── support/cors/        CORS 辅助
+│   └── CorsConfigFactory              CORS 配置工厂
+└── util/                Servlet 工具
+    ├── CachedBodyHttpServletRequest   请求体缓存包装器
+    ├── CookieUtil                     Cookie 工具
+    ├── ForwardedHeaderParser          转发头解析器
+    ├── ServletUtil                    Servlet 工具
+    └── XssHttpServletRequestWrapper   XSS 请求包装器
+```
+
+## 5️⃣ commons-excel Excel 导入导出工具
+
+### 包结构
+
+```
+cn.aryee.commons.excel
+├── annotation/          Excel 注解
+├── constants/           Excel 常量
+├── converter/           数据转换器
+├── excelhandle/         Excel 处理器
+├── read/                数据读取监听器
+├── service/             Excel 服务
+└── style/               样式处理
 ```
 
 ## 兼容性

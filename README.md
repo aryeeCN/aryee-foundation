@@ -170,10 +170,11 @@ cn.aryee.foundation                    # Maven Central groupId
 │   ├── commons-core                   # 纯 JDK 核心（异常/响应/分页/ID/加密/工具）
 │   ├── commons-domain                 # 通用领域模型（BaseEntity/DTOModel/VOModel/PageResult）
 │   ├── commons-spring                 # Spring 环境工具（BeanConvert/Json/SpringUtil/AopUtil）
-│   └── commons-web                    # Web 层工具（过滤器/拦截器/异常处理）
+│   ├── commons-servlet                # Servlet/MVC 专属（过滤器/异常处理/CORS/日志切面）
+│   └── commons-excel                  # Excel 导入导出工具（基于 EasyExcel）
 ├── aryee-foundation-cache             # 缓存模块（Redis + Caffeine）
 ├── aryee-foundation-database          # 数据库模块（MyBatis-Plus + JPA + R2DBC + H2 嵌入式默认）
-├── aryee-foundation-security          # 安全模块（Sa-Token + JWT + OAuth2 + 幂等 + MFA）
+├── aryee-foundation-security          # 安全模块（本地 JWT 核心 + Sa-Token/Keycloak/OAuth 可插拔适配器）
 ├── aryee-foundation-storage           # 存储模块（Local/OSS/COS/Qiniu/MinIO）
 ├── aryee-foundation-messaging         # 消息模块（Kafka/RabbitMQ/RocketMQ，收发完整）
 ├── aryee-foundation-transport         # 传输模块（入站 Web + 出站 OpenFeign/WebClient，多注册中心 SPI）
@@ -225,7 +226,7 @@ aryee-foundation-{module}/
 
 | 架构形态 | 示例项目 | 聚合能力 | 适用场景 |
 |---------|---------|---------|---------|
-| **单体架构** | `architecture-monolith-example` | commons-web + cache(Caffeine) + database(H2 嵌入式) + storage(Local) + event(InMemory) + scheduler(Quartz) + security + transport(Static) + transaction(Local) | 小型应用、演示、单体零外部依赖 |
+| **单体架构** | `architecture-monolith-example` | commons-servlet + commons-excel + cache(Caffeine) + database(H2 嵌入式) + storage(Local) + event(InMemory) + scheduler(Quartz) + security + transport(Static) + transaction(Local) | 小型应用、演示、单体零外部依赖 |
 | **微服务架构** | `architecture-microservice-example` | cache(Redis) + database(MySQL) + transport(Nacos) + gateway(Reactive) + transaction(Seata) + scheduler(XXL-Job) + security + monitoring | 微服务集群，Nacos 注册发现 + Seata 分布式事务 |
 | **云原生架构** | `architecture-cloudnative-example` | transport(K8s) + gateway(mesh/Istio) + monitoring(OTel) + security + storage + event + scheduler | K8s 云原生环境，ConfigMap 热刷新 |
 
@@ -249,7 +250,7 @@ aryee-foundation-{module}/
 | [commons](docs/modules/commons.md) | 公共基础模块（异常/响应/分页/ID/加密/工具/Bean 转换/JSON/Web 工具） | —（基础依赖） | —（基础依赖） |
 | [cache](docs/modules/cache.md) | 缓存模块（Redis + Caffeine） | cache-spring-boot-starter | cache-reactive-spring-boot-starter |
 | [database](docs/modules/database.md) | 数据库模块（MyBatis-Plus + JPA + R2DBC） | database-spring-boot-starter | database-reactive-spring-boot-starter |
-| [security](docs/modules/security.md) | 安全模块（Sa-Token + JWT + OAuth2 + 幂等 + MFA） | security-spring-boot-starter | security-reactive-spring-boot-starter |
+| [security](docs/modules/security.md) | 安全模块（本地 JWT 核心 + Sa-Token/Keycloak/OAuth 适配器） | security-spring-boot-starter | security-reactive-spring-boot-starter |
 | [storage](docs/modules/storage.md) | 存储模块（Local/OSS/COS/Qiniu/MinIO） | storage-spring-boot-starter | storage-reactive-spring-boot-starter |
 | [messaging](docs/modules/messaging.md) | 消息模块（Kafka/RabbitMQ/RocketMQ，收发完整） | messaging-spring-boot-starter | messaging-reactive-spring-boot-starter |
 | [ai](docs/modules/ai.md) | AI 模块（LLM + RAG + Agent + Embedding + VectorStore） | ai-spring-boot-starter | ai-reactive-spring-boot-starter |

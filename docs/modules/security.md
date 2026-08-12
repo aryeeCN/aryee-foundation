@@ -1,19 +1,27 @@
 # Aryee Security 安全基础设施模块
 
 > **所属项目**: [Aryee Foundation](../../README.md)
-> **技术栈**: Java 21、Spring Boot 4.0.7、Sa-Token 1.45.0、JJWT 0.12.6、OAuth2
+> **技术栈**: Java 21、Spring Boot 4.0.7、JJWT 0.12.6、Sa-Token 1.45.0（适配器）、Keycloak 25.0.6（适配器）、OAuth2
 
 ## 简介
 
-安全基础设施模块提供统一的安全解决方案，基于 **Sa-Token + JWT + OAuth2 + 幂等 + MFA** 五大能力构建，同时支持 Servlet（阻塞式）和 WebFlux（响应式）双模式，确保分布式系统的安全性。
+安全基础设施模块采用**精简核心 + 可插拔适配器**架构，提供统一的安全解决方案。核心模块基于 **JJWT + 内存/Redis** 构建本地安全能力，Sa-Token / Keycloak / OAuth 作为独立适配器按需引入。
 
-模块遵循 Aryee Foundation 三层架构规范，API 层只定义契约，Infrastructure 层提供多种实现，Autoconfigure 层基于条件装配自动注入。
+```
+用户引入 security-spring-boot-starter
+  ├── 默认获得：本地 JWT 认证 + 权限管理 + Web 防护 + 签名加密（仅依赖 JJWT）
+  ├── 可选引入 security-satoken → 切换为 Sa-Token 认证
+  ├── 可选引入 security-keycloak → 切换为 Keycloak 认证
+  └── 可选引入 security-oauth → 获得第三方 OAuth 登录能力
+```
+
+模块遵循 Aryee Foundation 三层架构规范，API 层只定义契约，Infrastructure 层提供核心实现，适配器模块各自独立装配，引入 jar 即生效。
 
 ### 核心特性
 
-- **认证授权**：Sa-Token 鉴权 + JWT Token 双轨制，支持本地、数据库、Keycloak 多种认证源
+- **认证授权**：默认本地 JWT 认证，可选切换为 Sa-Token / Keycloak 适配器，零配置即可获得基础安全
 - **JWT Token**：基于 JJWT 0.12.6 的 Token 生成 / 验证 / 刷新 / 黑名单机制
-- **OAuth2.0**：内置 GitHub / Google / 微信 / Gitee / 支付宝 平台适配器，支持 SPI 自定义扩展
+- **OAuth2.0**：独立 `security-oauth` 适配器，内置 GitHub / Google / 微信 / Gitee / 支付宝平台 Provider，支持 SPI 自定义扩展
 - **接口幂等**：基于 `@Idempotent` 注解 + SpEL 表达式，支持 Token / 业务键 / 用户操作三类幂等键
 - **多因素认证（MFA）**：TOTP / 短信 / 邮件 多因子认证，支持挑战-应答流程
 - **加解密**：AES / RSA / MD5 / SHA-256 / BCrypt，支持 GCM 模式与密钥派生
@@ -28,7 +36,10 @@
 ```
 aryee-foundation-security/
 ├── security-api/                              # API 契约层（接口、注解、模型、配置属性）
-├── security-infrastructure/                   # 基础设施层（Blocking + Reactive 双实现）
+├── security-infrastructure/                   # 核心实现（仅 JJWT + 内存/Redis，零外部框架依赖）
+├── security-satoken/                          # [适配器] Sa-Token 认证
+├── security-keycloak/                         # [适配器] Keycloak 认证
+├── security-oauth/                            # [适配器] 第三方 OAuth 登录（GitHub/Google/微信/Gitee/支付宝）
 ├── security-spring-boot-autoconfigure/        # 阻塞式自动配置
 ├── security-reactive-spring-boot-autoconfigure/  # 响应式自动配置
 ├── security-spring-boot-starter/              # 阻塞式 Starter（Servlet / WebMVC）
@@ -40,10 +51,13 @@ aryee-foundation-security/
 | 模块 | artifactId | 说明 |
 |------|------------|------|
 | API | `security-api` | 对外契约：服务接口、注解、枚举、异常、配置属性、模型 |
-| Infrastructure | `security-infrastructure` | 实现：Blocking（Sa-Token / JWT / Keycloak / BCrypt）+ Reactive（JWT / BCrypt）+ OAuth + 幂等 + 签名 |
-| Autoconfigure | `security-spring-boot-autoconfigure` | Servlet 自动配置，注册 `AryeeSecurityAutoConfiguration` / `OAuthAutoConfiguration` / `AryeeIdempotentAutoConfiguration` |
-| Reactive Autoconfigure | `security-reactive-spring-boot-autoconfigure` | WebFlux 自动配置，注册 `AryeeSecurityReactiveAutoConfiguration` / `AryeeIdempotentReactiveAutoConfiguration` |
-| Starter | `security-spring-boot-starter` | 阻塞式依赖聚合 |
+| Infrastructure | `security-infrastructure` | 核心实现：Blocking（JWT / BCrypt）+ Reactive（JWT / BCrypt）+ 幂等 + 签名 + Web 防护 + 会话 + 审计 |
+| Sa-Token 适配器 | `security-satoken` | Sa-Token 认证实现（Blocking + Reactive），`@ConditionalOnClass("cn.dev33.satoken.stp.StpUtil")` |
+| Keycloak 适配器 | `security-keycloak` | Keycloak 认证实现（Blocking + Reactive），`@ConditionalOnClass("org.keycloak.admin.client.Keycloak")` |
+| OAuth 适配器 | `security-oauth` | 第三方 OAuth 登录（GitHub/Google/微信/Gitee/支付宝），Blocking + Reactive 双模式 |
+| Autoconfigure | `security-spring-boot-autoconfigure` | Servlet 自动配置，注册 `AryeeSecurityAutoConfiguration` / `AryeeIdempotentAutoConfiguration` |
+| Reactive Autoconfigure | `security-reactive-spring-boot-autoconfigure` | WebFlux 自动配置 |
+| Starter | `security-spring-boot-starter` | 阻塞式依赖聚合（核心 + 自动装配） |
 | Reactive Starter | `security-reactive-spring-boot-starter` | 响应式依赖聚合 |
 
 ### security-api 包结构
@@ -67,14 +81,14 @@ cn.aryee.security.api/
 ```
 cn.aryee.security.infrastructure/
 ├── blocking/                    # 阻塞式实现
-│   ├── auth/                    # SaTokenAuthService / DatabaseAuthService / LocalAuthService / KeycloakAuthService
+│   ├── auth/                    # LocalAuthService（本地 JWT 认证，默认兜底）
 │   ├── bcrypt/                  # BCryptCryptoService
 │   ├── cache/                   # 基于 Cache 的安全服务（防暴力破解、会话、审计）
 │   ├── context/                 # DefaultSecurityContextSnapshot（安全上下文 SPI 实现）
 │   ├── crypto/                  # CryptoServiceImpl（AES / RSA / Base64）
 │   ├── jwt/                     # JwtTokenService（JJWT 实现）
 │   ├── permission/              # DefaultPermissionManager / InMemoryPermissionCacheService
-│   ├── servlet/                 # Servlet 配置、SaTokenConfig、XssFilter
+│   ├── servlet/                 # Servlet 配置、XssFilter
 │   ├── session/                 # InMemorySessionManagementService / RedisSessionManagementService
 │   ├── signature/               # HmacSignatureService + SignatureInterceptor / SignatureAspect
 │   ├── web/                     # CaptchaService、RateLimitInterceptor、WebSecurityAutoConfiguration
@@ -82,7 +96,6 @@ cn.aryee.security.infrastructure/
 │       ├── filter/              # SecurityContextFilter（清理）、SecurityContextInboundFilter（入站恢复）
 │       └── interceptor/         # SecurityContextFeignInterceptor、SecurityContextRestTemplateInterceptor（出站传播）
 ├── idempotent/                  # 幂等实现（Blocking + Reactive，内存 + Redis）
-├── oauth/                       # OAuth2 实现：GitHub / Google / Wechat / Gitee / Alipay 平台 Provider
 ├── reactive/                    # 响应式实现
 │   ├── auth/                    # ReactiveJwtAuthService
 │   ├── bcrypt/                  # ReactiveBCryptCryptoService
@@ -93,27 +106,226 @@ cn.aryee.security.infrastructure/
 └── util/                        # HttpRequestSecurityUtil、XssFilterUtil
 ```
 
+## 模块分层与引用规则
+
+安全模块采用**契约层 + 核心实现 + 可插拔适配器**分层架构，不同架构场景下的引用方式不同。
+
+### 模块分层
+
+```
+security-api                              ← 纯契约层（接口/注解/模型），所有消费方只依赖这一层
+    ↑
+security-infrastructure                   ← 核心实现（本地 JWT + JJWT + 内存/Redis）
+    ↑
+security-spring-boot-starter              ← 阻塞式 Starter（聚合 api + infrastructure + autoconfigure）
+security-reactive-spring-boot-starter     ← 响应式 Starter（WebFlux 场景）
+
+--- 以下为可选适配器，引入 jar + 配置即自动装配 ---
+security-satoken                          ← Sa-Token 认证适配器（替换本地 JWT）
+security-keycloak                         ← Keycloak 认证适配器（替换本地 JWT）
+security-oauth                            ← 第三方 OAuth 登录适配器（GitHub/微信/Google/Gitee/支付宝）
+```
+
+### 跨模块依赖规则
+
+- 功能模块引用 security 时，**只能依赖 `security-api`**（契约层）
+- **禁止依赖** `security-infrastructure` 及任何适配器模块（`security-satoken` / `security-keycloak` / `security-oauth`）
+- 实际安全实现由最终的应用工程引入 Starter + 适配器，通过 `@ConditionalOnBean` 条件装配
+
+### OAuth 与认证适配器的关系
+
+OAuth 适配器与 Sa-Token / Keycloak **不是互斥关系**，而是互补：
+
+| 能力 | Sa-Token / Keycloak | OAuth |
+|------|---------------------|-------|
+| 职责 | **认证授权**（签发/验证 Token） | **第三方登录**（GitHub/微信等 OAuth 流程） |
+| 接口 | `AuthService` / `ReactiveAuthService` | `OAuthAuthService` / `ReactiveOAuthAuthService` |
+| 使用位置 | 网关 + 所有下游服务 | 通常在网关或统一认证服务 |
+| 互斥关系 | Sa-Token 和 Keycloak **互斥**（同一时间只能用一个） | OAuth 与两者**不互斥**，可叠加 |
+
 ## Maven 依赖
 
-### 阻塞式（Servlet / WebMVC）
+### 场景一：单体架构（Monolith）
+
+单体应用是一个完整的 Spring Boot 应用，认证/授权/OAuth 登录都在同一个进程内完成。
+
+#### 1.1 单体 + 本地 JWT（零配置默认）
 
 ```xml
+<!-- 仅需一个 Starter，即可获得完整安全能力 -->
 <dependency>
     <groupId>cn.aryee.foundation</groupId>
     <artifactId>security-spring-boot-starter</artifactId>
 </dependency>
 ```
 
-### 响应式（WebFlux）
+无需额外配置，默认使用本地 JWT 认证。适合内部系统、管理后台等不需要第三方登录的场景。
+
+#### 1.2 单体 + Sa-Token
+
+```xml
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-spring-boot-starter</artifactId>
+</dependency>
+<!-- Sa-Token 适配器：引入后切换认证实现 -->
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-satoken</artifactId>
+</dependency>
+<!-- 可选：第三方 OAuth 登录 -->
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-oauth</artifactId>
+</dependency>
+```
+
+```yaml
+aryee:
+  security:
+    auth:
+      type: sa-token          # 切换认证实现为 Sa-Token
+```
+
+#### 1.3 单体 + Keycloak
+
+```xml
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-spring-boot-starter</artifactId>
+</dependency>
+<!-- Keycloak 适配器：引入后切换认证实现 -->
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-keycloak</artifactId>
+</dependency>
+<!-- 可选：第三方 OAuth 登录（与 Keycloak SSO 互补） -->
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-oauth</artifactId>
+</dependency>
+```
+
+```yaml
+aryee:
+  security:
+    auth:
+      type: keycloak          # 切换认证实现为 Keycloak
+keycloak:
+  auth-server-url: http://keycloak:8080/auth
+  realm: my-realm
+  resource: my-client-id
+  credentials:
+    secret: my-client-secret
+```
+
+#### 1.4 单体 + WebFlux（响应式）
+
+将 `security-spring-boot-starter` 替换为 `security-reactive-spring-boot-starter`，适配器引用方式不变。每个适配器内部均有 Blocking + Reactive 双模式实现，自动按 classpath 装配。
+
+### 场景二：微服务架构（Microservices）
+
+微服务拆分为**网关**和**下游服务**，安全职责分离：
+
+```
+客户端请求 → Gateway（WebFlux）
+              ├─ AuthGatewayFilter        ← ReactiveAuthService 鉴权
+              ├─ SameTokenForwardFilter   ← ReactiveSameTokenService 注入 Same-Token
+              └─ ApiSignatureFilter       ← ReactiveSignatureService 签名验证
+                    │
+                    ↓ Same-Token 头 + 安全上下文
+              ┌─────┼─────┐
+              ↓     ↓     ↓
+           服务A  服务B  服务C  ← 各自验证 Token / 恢复安全上下文
+```
+
+#### 2.1 网关服务
+
+网关**不需要**引入 `security-spring-boot-starter`。`gateway-reactive-spring-boot-starter` 已传递依赖 `security-api`（契约层），实际认证实现由适配器模块提供。
+
+```xml
+<!-- 网关 Starter（已聚合 gateway 核心 + security-api 契约） -->
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>gateway-reactive-spring-boot-starter</artifactId>
+</dependency>
+
+<!-- 认证适配器：按需选择一个 -->
+<!-- 方案 A：Sa-Token（提供 ReactiveAuthService + ReactiveSameTokenService） -->
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-satoken</artifactId>
+</dependency>
+
+<!-- 方案 B：Keycloak（提供 ReactiveAuthService，无 SameTokenService） -->
+<!--
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-keycloak</artifactId>
+</dependency>
+-->
+
+<!-- 可选：OAuth 第三方登录（网关统一入口处理登录跳转） -->
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-oauth</artifactId>
+</dependency>
+```
+
+> **Same-Token 说明**：`SameTokenForwardFilter` 通过 `ReactiveSameTokenService` 抽象获取 Same-Token，网关本身不依赖任何具体安全框架。当前仅 Sa-Token 适配器提供该实现，Keycloak 适配器未提供（网关使用 Keycloak 时 Same-Token 过滤器不会装配）。
+
+#### 2.2 下游微服务（Servlet 栈）
+
+下游服务需要完整的安全能力（Token 验证、权限检查、安全上下文恢复与传播）：
+
+```xml
+<!-- 下游服务需要完整 Starter -->
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-spring-boot-starter</artifactId>
+</dependency>
+<!-- 与网关保持一致的认证适配器（用于验证 Same-Token 等） -->
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-satoken</artifactId>
+</dependency>
+```
+
+```yaml
+aryee:
+  security:
+    inbound-enabled: true     # 启用入站上下文恢复（从网关传播的 header 恢复 userId/tenantId）
+    outbound-enabled: true    # 启用出站上下文传播（Feign 调用其他服务时自动携带）
+    auth:
+      type: sa-token          # 与网关保持一致
+```
+
+#### 2.3 下游微服务（WebFlux 栈）
 
 ```xml
 <dependency>
     <groupId>cn.aryee.foundation</groupId>
     <artifactId>security-reactive-spring-boot-starter</artifactId>
 </dependency>
+<dependency>
+    <groupId>cn.aryee.foundation</groupId>
+    <artifactId>security-satoken</artifactId>
+</dependency>
 ```
 
-> 二者互斥，根据 Web 技术栈二选一引入；版本由 `bom-internal` 统一锁定，无需声明 `<version>`。
+### 引用矩阵速查表
+
+| 场景 | 基础 Starter | 认证适配器 | OAuth | 说明 |
+|------|-------------|-----------|-------|------|
+| 单体 + 本地 JWT | `security-spring-boot-starter` | 无需额外引入 | 按需 | 零配置即可使用 |
+| 单体 + Sa-Token | `security-spring-boot-starter` | `security-satoken` | 按需 | `auth.type=sa-token` |
+| 单体 + Keycloak | `security-spring-boot-starter` | `security-keycloak` | 按需 | `auth.type=keycloak` |
+| 单体 + WebFlux | `security-reactive-spring-boot-starter` | 同上 | 按需 | 适配器内含 Reactive 双模式 |
+| 微服务·网关 | `gateway-reactive-spring-boot-starter` | `security-satoken` 或 `security-keycloak` | 按需 | 不需要 security-starter |
+| 微服务·下游（Servlet） | `security-spring-boot-starter` | 与网关一致 | 通常不需要 | Token 验证 + 上下文传播 |
+| 微服务·下游（WebFlux） | `security-reactive-spring-boot-starter` | 与网关一致 | 通常不需要 | 同上 |
+
+> 版本由 `bom-security` 统一锁定，无需声明 `<version>`。
 
 ## 配置项
 
@@ -143,6 +355,7 @@ aryee:
       # 见 SessionPolicy.java
 
     auth:
+      type: local                        # 认证实现类型：local（默认） / sa-token / keycloak
       mfa-enabled: false                 # 是否启用多因素认证
       default-mfa-type: TOTP            # 默认 MFA 类型
       account-lock-enabled: true         # 是否启用账户锁定
@@ -153,17 +366,23 @@ aryee:
       device-fingerprint-enabled: false  # 是否启用设备指纹验证
       remember-me-days: 30               # 记住登录时间（天）
       login-log-enabled: true           # 是否启用登录日志
-      oauth:
-        enabled: false                  # 是否启用 OAuth 登录
-        github:                          # OAuth 提供商配置
-          enabled: false
-          client-id: ${GITHUB_CLIENT_ID:}
-          client-secret: ${GITHUB_CLIENT_SECRET:}
-          redirect-uri: ${GITHUB_REDIRECT_URI:}
-          scope: [user:info]
-        google: { }
-        wechat: { }
-        gitee: { }
+
+    # OAuth 登录配置（需引入 security-oauth 适配器）
+    oauth:
+      enabled: true                      # 是否启用 OAuth 登录（默认启用）
+
+# Sa-Token 配置（需引入 security-satoken 适配器 + auth.type=sa-token）
+# aryee:
+#   security:
+#     sa-token:
+#       interceptor-enabled: true        # 是否启用 Sa-Token 拦截器
+
+# Keycloak 配置（需引入 security-keycloak 适配器 + auth.type=keycloak）
+# keycloak:
+#   auth-server-url: http://localhost:8080/auth
+#   realm: master
+#   resource: admin-cli
+#   credentials.secret: ""
 ```
 
 ## 核心 API
@@ -182,7 +401,7 @@ public interface AuthService {
 }
 ```
 
-Blocking 实现可选：`SaTokenAuthService`、`LocalAuthService`、`DatabaseAuthService`、`KeycloakAuthService`，通过 `AuthServiceFactory` 工厂加载；Reactive 对应 `ReactiveAuthService`（默认 `ReactiveJwtAuthService`）。
+Blocking 实现可选：`LocalAuthService`（默认，本地 JWT）、通过适配器引入 `SaTokenAuthService` / `KeycloakAuthService`，通过 `AuthServiceFactory` 工厂按优先级自动选择；Reactive 对应 `ReactiveAuthService`（默认 `ReactiveJwtAuthService`）。
 
 ### TokenService（JWT 令牌服务）
 
@@ -227,6 +446,8 @@ public interface OAuthAuthService {
 ```
 
 内置平台 Provider：`GitHubOAuthPlatformProvider`、`GoogleOAuthPlatformProvider`、`WechatOAuthPlatformProvider`、`GiteeOAuthPlatformProvider`、`AlipayOAuthPlatformProvider`；可通过 SPI 实现 `OAuthServiceProvider` 自定义扩展。
+
+> OAuth 实现位于独立适配器 `security-oauth`，需显式引入。
 
 ### CryptoService（加解密）
 
@@ -535,13 +756,22 @@ SecurityContextHolder.executeWith("user-123", "tenant-456", () -> {
 - `cn.aryee.security.autoconfigure.AryeeSecurityAutoConfiguration`：核心安全配置，默认装配 MFA / 权限缓存 / 审计 / 防重放 / 防暴力破解 / 会话管理等内存实现
   - **入站过滤器**（`aryee.security.inbound-enabled=true`）：`SecurityContextInboundFilter`（从请求头恢复上下文）、`SecurityContextFilter`（清理 ThreadLocal）
   - **出站拦截器**（`aryee.security.outbound-enabled=true`）：`SecurityContextFeignInterceptor`（Feign）、`SecurityContextRestTemplateInterceptor`（RestTemplate）
-- `cn.aryee.security.autoconfigure.oauth.OAuthAutoConfiguration`：OAuth2 自动配置
 - `cn.aryee.security.autoconfigure.idempotent.AryeeIdempotentAutoConfiguration`：幂等自动配置
+
+### 适配器自动装配
+
+每个适配器模块包含自己的 `AutoConfiguration`，引入 jar 即自动激活。所有适配器均支持 Blocking + Reactive 双模式，Reactive 配置通过嵌套静态类实现（条件：`@ConditionalOnClass("reactor.core.publisher.Mono")`）：
+
+- `security-satoken`：`SaTokenAutoConfiguration`（条件：`@ConditionalOnClass("cn.dev33.satoken.stp.StpUtil")` + `auth.type=sa-token`）
+  - 嵌套 `ReactiveSaTokenConfiguration`：注册 `ReactiveSaTokenAuthService` + `ReactiveSaTokenAuthServiceFactory`
+- `security-keycloak`：`KeycloakAutoConfiguration`（条件：`@ConditionalOnClass("org.keycloak.admin.client.Keycloak")` + `auth.type=keycloak`）
+  - 嵌套 `ReactiveKeycloakConfiguration`：注册 `ReactiveKeycloakAuthService` + `ReactiveKeycloakAuthServiceFactory`
+- `security-oauth`：`OAuthAutoConfiguration`（条件：`@ConditionalOnClass("com.fasterxml.jackson.databind.ObjectMapper")` + `oauth.enabled=true`，默认启用）
+  - 嵌套 `ReactiveOAuthConfiguration`：注册 `ReactiveOAuthAuthServiceImpl` + `ReactiveOAuthAuthServiceFactory`
 
 ### 响应式自动装配
 
 - `cn.aryee.security.reactive.autoconfigure.AryeeSecurityReactiveAutoConfiguration`：响应式签名、XSS 过滤
-- `cn.aryee.security.autoconfigure.oauth.OAuthAutoConfiguration`：OAuth2（与阻塞式共享）
 - `cn.aryee.security.reactive.autoconfigure.idempotent.AryeeIdempotentReactiveAutoConfiguration`：响应式幂等
 - **响应式安全上下文**：`ReactiveSecurityContextInboundFilter`（入站恢复）、`SecurityContextWebFilter`（清理）、`SecurityContextWebClientFilter`（出站传播）
 
