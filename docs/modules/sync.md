@@ -22,6 +22,7 @@
 - ✅ **SPI 服务发现**：通过 `DataSyncServiceFactory` + `META-INF/services` 实现可插拔
 - ✅ **安全上下文透传**：异步同步时自动捕获并恢复 `SecurityContextHolder`（userId / tenantId），确保审计日志等安全功能在异步线程中正常工作
 - ✅ **统一异常体系**：`RedisDistributedLock` 与 `DefaultDataSyncService` 采用 `SystemException` 替代 `RuntimeException`，与全局异常体系保持一致
+- ✅ **智能启动诊断**：启动时清晰展示异步线程池大小、统计功能状态、重试配置
 
 ## 架构定位
 
