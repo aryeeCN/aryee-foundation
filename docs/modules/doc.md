@@ -16,7 +16,7 @@ API 治理与文档平台，基于 SpringDoc OpenAPI 3 + Knife4j 提供开箱即
 - **Knife4j 增强 UI**：默认启用 Knife4j，提供更友好的中文 UI（`/doc.html`）
 - **双模式支持**：Blocking（WebMVC）与 Reactive（WebFlux）独立 Starter，二选一引入
 - **启动日志**：应用启动时打印 Swagger UI / API Docs / Knife4j UI 访问地址
-- **微服务增强版**：提供 `apidocmicroservice-spring-boot-starter` 和 `apidocreactive-microservice-spring-boot-starter`，内置 Spring Cloud Commons + Gateway Server，适用于微服务网关文档聚合
+- **微服务增强版**：提供 `apidocmicroservice-spring-boot-starter` 和 `apidoc-reactive-microservice-spring-boot-starter`，内置 Spring Cloud Commons + Gateway Server，适用于微服务网关文档聚合
 
 ## 模块结构
 
@@ -37,15 +37,15 @@ aryee-foundation-apidoc/
 │       ├── customizer/                          # OpenAPI 定制器（响应Schema/全局参数/可见性过滤）
 │       ├── export/                              # 离线文档导出实现
 │       └── gateway/                             # 网关文档聚合实现
-├── apidocspring-boot-autoconfigure/               # Blocking 自动配置
+├── apidoc-spring-boot-autoconfigure/               # Blocking 自动配置
 │   └── src/main/java/cn/aryee/doc/autoconfigure/
 │       └── AryeeDocAutoConfiguration.java       # 自动配置类
-├── apidocreactive-spring-boot-autoconfigure/      # Reactive 自动配置
+├── apidoc-reactive-spring-boot-autoconfigure/      # Reactive 自动配置
 │   └── src/main/java/cn/aryee/doc/reactive/autoconfigure/
 │       └── AryeeDocReactiveAutoConfiguration.java
-├── apidocspring-boot-starter/                     # Blocking Starter（依赖聚合）
+├── apidoc-spring-boot-starter/                     # Blocking Starter（依赖聚合）
 │   └── pom.xml
-└── apidocreactive-spring-boot-starter/            # Reactive Starter（依赖聚合）
+└── apidoc-reactive-spring-boot-starter/            # Reactive Starter（依赖聚合）
     └── pom.xml
 ```
 
@@ -56,7 +56,7 @@ aryee-foundation-apidoc/
 ```xml
 <dependency>
     <groupId>cn.aryee.foundation</groupId>
-    <artifactId>apidocspring-boot-starter</artifactId>
+    <artifactId>apidoc-spring-boot-starter</artifactId>
 </dependency>
 ```
 
@@ -65,7 +65,7 @@ aryee-foundation-apidoc/
 ```xml
 <dependency>
     <groupId>cn.aryee.foundation</groupId>
-    <artifactId>apidocreactive-spring-boot-starter</artifactId>
+    <artifactId>apidoc-reactive-spring-boot-starter</artifactId>
 </dependency>
 ```
 
