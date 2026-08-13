@@ -186,7 +186,7 @@ cn.aryee.foundation                    # Maven Central groupId
 ├── aryee-foundation-tenant            # 多租户模块（JDBC + R2DBC 隔离）
 ├── aryee-foundation-ai                # AI 模块（LLM + RAG + Agent + Embedding + VectorStore）
 ├── aryee-foundation-gateway           # 网关增强模块（限流/熔断/灰度/聚合，MVC + Reactive 双栈）
-├── aryee-foundation-doc               # API 文档模块（OpenAPI 分组 + Bearer 鉴权）
+├── aryee-foundation-apidoc               # API 文档模块（OpenAPI 分组 + Bearer 鉴权）
 ├── aryee-foundation-dict              # 字典管理模块
 ├── aryee-foundation-websocket         # WebSocket 实时通信模块
 ├── aryee-foundation-i18n              # 国际化模块（5 种 Locale 解析策略）
