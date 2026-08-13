@@ -43,7 +43,7 @@ Aryee Foundation 官方文档索引。框架以二进制构件发布到 Maven Ce
 | [tenant](modules/tenant.md) | 多租户（JDBC + R2DBC 隔离） |
 | [ai](modules/ai.md) | AI（LLM + RAG + Agent + Embedding + VectorStore） |
 | [gateway](modules/gateway.md) | 网关增强（限流/熔断/灰度/聚合，MVC + Reactive 双栈） |
-| [doc](modules/doc.md) | API 文档（OpenAPI 分组 + Bearer 鉴权） |
+| [apidoc](modules/doc.md) | API 文档（OpenAPI 分组 + 安全方案声明） |
 | [dict](modules/dict.md) | 字典管理 |
 | [websocket](modules/websocket.md) | WebSocket 实时通信 |
 | [i18n](modules/i18n.md) | 国际化（5 种 Locale 解析策略） |

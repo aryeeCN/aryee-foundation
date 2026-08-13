@@ -6,7 +6,7 @@ API 治理与文档平台，基于 SpringDoc OpenAPI 3 + Knife4j 提供开箱即
 
 - **开箱即用**：引入 Starter 即自动装配 OpenAPI + GroupedOpenApi，无需任何配置
 - **全架构支持**：单体、微服务、云原生均可使用，网关聚合为条件激活的增值能力
-- **统一 Bearer 鉴权**：自动注入 `bearerAuth` SecurityScheme，所有接口默认要求 Token
+- **统一安全方案声明**：自动注入 `bearerAuth` SecurityScheme，文档 UI 默认展示 Authorize 入口（实际鉴权由 security 模块负责）
 - **R&lt;T&gt; 响应 Schema**：文档 UI 自动展示完整的统一响应结构示例
 - **全局参数注入**：自动向所有接口注入 X-Trace-Id、X-Tenant-Id、Accept-Language 等框架级 Header
 - **接口可见性治理**：通过 `@DocHidden` / `@DocVisible` 注解控制接口在文档中的显隐
@@ -244,7 +244,7 @@ public class UserVO {
 ```java
 @PostMapping("/login")
 @Operation(summary = "用户登录", description = "无需 Token 的公开接口")
-@SecurityRequirements  // 空注解表示覆盖全局 Bearer 鉴权
+@SecurityRequirements  // 空注解表示覆盖全局安全方案声明（标记为公开接口）
 public R<LoginVO> login(@Valid @RequestBody LoginDTO dto) {
     return R.ok(authService.login(dto));
 }
