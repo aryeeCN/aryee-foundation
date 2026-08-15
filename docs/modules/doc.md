@@ -16,14 +16,14 @@ API 治理与文档平台，基于 SpringDoc OpenAPI 3 + Knife4j 提供开箱即
 - **Knife4j 增强 UI**：默认启用 Knife4j，提供更友好的中文 UI（`/doc.html`）
 - **双模式支持**：Blocking（WebMVC）与 Reactive（WebFlux）独立 Starter，二选一引入
 - **启动日志**：应用启动时打印 Swagger UI / API Docs / Knife4j UI 访问地址
-- **微服务增强版**：提供 `apidocmicroservice-spring-boot-starter` 和 `apidoc-reactive-microservice-spring-boot-starter`，内置 Spring Cloud Commons + Gateway Server，适用于微服务网关文档聚合
+- **微服务增强版**：提供 `apidoc-microservice-spring-boot-starter` 和 `apidoc-reactive-microservice-spring-boot-starter`，内置 Spring Cloud Commons + Gateway Server，适用于微服务网关文档聚合
 
 ## 模块结构
 
 ```
 aryee-foundation-apidoc/
 ├── pom.xml                                      # 聚合POM
-├── apidocapi/                                     # API 契约层
+├── apidoc-api/                                     # API 契约层
 │   └── src/main/java/cn/aryee/doc/api/
 │       ├── annotation/                          # 注解（@DocHidden/@DocVisible/@DocSensitive）
 │       ├── config/                              # 配置属性（DocProperties/DocReactiveProperties）
@@ -32,7 +32,7 @@ aryee-foundation-apidoc/
 │       ├── exception/                           # 异常（DocException）
 │       ├── model/                               # 模型（SwaggerResource/GlobalParameter）
 │       └── service/                             # 服务接口（DocExportService/DocAggregationService）
-├── apidocinfrastructure/                          # 基础设施层
+├── apidoc-infrastructure/                          # 基础设施层
 │   └── src/main/java/cn/aryee/doc/infrastructure/
 │       ├── customizer/                          # OpenAPI 定制器（响应Schema/全局参数/可见性过滤）
 │       ├── export/                              # 离线文档导出实现
