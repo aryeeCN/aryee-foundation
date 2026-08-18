@@ -225,7 +225,7 @@ cn.aryee.commons.domain
 │   └── SimpleDomainEventBus         简单内存事件总线实现
 ├── model/               领域模型
 │   ├── BaseAggregateRoot            聚合根基类（继承 BaseEntity）
-│   ├── BaseEntity                   持久化实体基类（createTime/updateTime/creator/updater/deleted/version/remark/ext）
+│   ├── Entity                   持久化实体基类（createTime/updateTime/creator/updater/deleted/version/remark/ext）
 │   ├── DTOModel<T>                  DTO 入参基类（递归泛型 + 链式调用 + convertTo）
 │   ├── VOModel<T>                   VO 出参基类（与 DTOModel 对称 + copyFrom）
 │   ├── QueryModel                   分页查询入参基类（pageNum/pageSize/orderBy/queryAll/offset/limit）
@@ -248,7 +248,7 @@ cn.aryee.commons.domain
 // 实体继承 BaseEntity（自动获得审计字段）
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserEntity extends BaseEntity {
+public class UserEntity extends Entity {
     private String username;
     private String phone;
 }

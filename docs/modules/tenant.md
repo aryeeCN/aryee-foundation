@@ -55,7 +55,7 @@ cn.aryee.tenant.api/
 ├── enums/         # TenantMode、TenantStatus、TenantType（实现 EnumService<String>）
 ├── exception/     # TenantException
 ├── handler/       # TenantHandler 接口
-├── model/        # Tenant（继承 BaseEntity<String>）
+├── model/        # Tenant（继承 Entity<String>）
 ├── properties/    # TenantProperties（含 CacheConfig 缓存隔离配置）
 ├── service/       # TenantService、TenantValidator
 └── util/          # TenantCacheKeyUtils（租户缓存键构建工具）
@@ -399,7 +399,7 @@ String tenantKey = TenantCacheKeyUtils.buildTenantKey("user:123", tenantProperti
 
 ### 6. 数据模型
 
-`Tenant` 继承 `BaseEntity<String>`，包含审计字段（createTime / updateTime / creator / updater / deleted / version）：
+`Tenant` 继承 `Entity<String>`，包含审计字段（createTime / updateTime / creator / updater / deleted / version）：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
