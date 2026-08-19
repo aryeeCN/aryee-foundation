@@ -2,7 +2,7 @@ package cn.aryee.examples.database.reactive;
 
 import cn.aryee.examples.database.reactive.entity.User;
 import cn.aryee.examples.database.reactive.service.UserService;
-import cn.aryee.database.api.query.PageResult;
+import cn.aryee.commons.domain.model.PageResult;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -258,8 +258,8 @@ class R2dbcReactiveIntegrationTest {
 
         StepVerifier.create(setup.then(userService.getPage(1, 3)))
                 .assertNext(page -> {
-                    assertThat(page.getContent()).hasSize(3);
-                    assertThat(page.getTotalElements()).isEqualTo(7);
+                    assertThat(page.getRecords()).hasSize(3);
+                    assertThat(page.getTotal()).isEqualTo(7);
                     assertThat(page.getPageSize()).isEqualTo(3);
                 })
                 .verifyComplete();

@@ -2,7 +2,7 @@ package cn.aryee.examples.database.blocking;
 
 import cn.aryee.examples.database.blocking.entity.JdbcUser;
 import cn.aryee.examples.database.blocking.service.JdbcUserService;
-import cn.aryee.database.api.query.PageResult;
+import cn.aryee.commons.domain.model.PageResult;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -262,9 +262,9 @@ class JdbcBlockingIntegrationTest {
         }
 
         PageResult<JdbcUser> page = jdbcUserService.getPage(1, 3);
-        assertThat(page.getContent()).hasSize(3);
-        assertThat(page.getTotalElements()).isEqualTo(7);
-        assertThat(page.getPageNumber()).isEqualTo(1);
+        assertThat(page.getRecords()).hasSize(3);
+        assertThat(page.getTotal()).isEqualTo(7);
+        assertThat(page.getPageNum()).isEqualTo(1);
         assertThat(page.getPageSize()).isEqualTo(3);
     }
 
@@ -282,8 +282,8 @@ class JdbcBlockingIntegrationTest {
         condition.put("age", 25);
 
         PageResult<JdbcUser> page = jdbcUserService.getPageByCondition(condition, 1, 4);
-        assertThat(page.getContent()).hasSize(4);
-        assertThat(page.getTotalElements()).isEqualTo(6);
+        assertThat(page.getRecords()).hasSize(4);
+        assertThat(page.getTotal()).isEqualTo(6);
     }
 
     // ==================== 软删除 ====================

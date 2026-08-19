@@ -1,6 +1,6 @@
 package cn.aryee.examples.database.oracle.reactive;
 
-import cn.aryee.database.api.query.PageResult;
+import cn.aryee.commons.domain.model.PageResult;
 import cn.aryee.examples.database.oracle.reactive.entity.User;
 import cn.aryee.examples.database.oracle.reactive.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -254,8 +254,8 @@ class R2dbcOracleIntegrationTest {
 
         StepVerifier.create(setup.then(userService.getPage(1, 3)))
                 .assertNext(page -> {
-                    assertThat(page.getContent()).hasSize(3);
-                    assertThat(page.getTotalElements()).isEqualTo(7);
+                    assertThat(page.getRecords()).hasSize(3);
+                    assertThat(page.getTotal()).isEqualTo(7);
                     assertThat(page.getPageSize()).isEqualTo(3);
                 })
                 .verifyComplete();
