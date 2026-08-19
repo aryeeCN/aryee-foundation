@@ -485,13 +485,14 @@ public class ReactiveOrderRepository {
 
     public Flux<Order> findAll(OrderQuery query) {
         return Mono.deferContextual(ctx -> {
-            DataPermissionContext dpCtx = ReactiveDataPermissionContextHolder.fromContext(ctx);
-            if (dpCtx != null && dpCtx.isValid()) {
-                String filter = dpCtx.buildSqlFilter("t1");
-                if (!filter.isEmpty()) {
-                    query.appendWhere(filter);
-                }
-            }
+            ReactiveDataPermissionContextHolder.fromContext(ctx)
+                    .filter(DataPermissionContext::isValid)
+                    .ifPresent(dpCtx -> {
+                        String filter = dpCtx.buildSqlFilter("t1");
+                        if (!filter.isEmpty()) {
+                            query.appendWhere(filter);
+                        }
+                    });
             return databaseClient.sql(query.toSql())
                     .bindAll(query.getParams())
                     .map(row -> rowToOrder(row))
